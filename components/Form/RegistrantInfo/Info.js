@@ -63,6 +63,14 @@ const colTwiceLayout = {
   xl: { span: 11 },
 }
 
+const colTwiceTailLayout = {
+  xs: { span: 24 },
+  sm: { span: 24 },
+  md: { span: 12 },
+  lg: { span: 12 },
+  xl: { span: 12 },
+}
+
 const colTrippleLayout = {
   xs: { span: 24 },
   sm: { span: 24 },
@@ -81,11 +89,21 @@ const colTrippleTailLayout = {
 
 
 class Info extends Component {
+
   constructor(props) {
     super(props)
     this.inputChangeFunc = this.inputChangeFunc.bind(this)
      // props.form.setFieldsValue({ weight: 50 })
+
   }
+
+  state = {
+    date: '',
+    month: '',
+    year: '',
+    age: '',
+  }
+
 
   inputChangeFunc = (e) => {
     const { inputChange } = this.props
@@ -109,18 +127,31 @@ class Info extends Component {
   }
 
   changeDate = (value) => {
+    this.setState({ ...this.state, date: value }, () => this.calcAge())
     const { inputChange } = this.props
     inputChange('info', 'date', value)
   }
 
   changeMonth = (value) => {
+    this.setState({ ...this.state, month: value }, () => this.calcAge())
     const { inputChange } = this.props
     inputChange('info', 'month', value)
   }
 
   changeYear = (value) => {
+    this.setState({ ...this.state, year: value }, () => this.calcAge())
     const { inputChange } = this.props
     inputChange('info', 'year', value)
+  }
+
+  calcAge = () => {
+    const { date, month, year } = this.state
+    if (date && month && year) {
+      const age = moment().diff(`${year}-${month}-${date}`, 'years')
+      this.setState({ ...this.state, age })
+    }
+
+    inputChange('info', 'age', age)
   }
 
   handleChange = (value) => {
@@ -142,8 +173,8 @@ class Info extends Component {
     const { state } = this.props
 
 
-    const dateOptions = [...Array(31).keys()].map(date => <Option key={date+1} value={date+1}>{date+1}</Option>)
-    const monthOptions = moment.months().map(month => <Option key={month} value={month}>{month}</Option>)
+    const dateOptions = [...Array(31).keys()].map(date => <Option key={date+1} value={String(date+1).padStart(2, "0")}>{date+1}</Option>)
+    const monthOptions = moment.months().map((month, index) => <Option key={month} value={String(index+1).padStart(2, "0")}>{month}</Option>)
     const yearOptions = [...Array(95).keys()].map(date => <Option key={date+1918} value={date+1918}>{date+1918+543}</Option>)
 
 
@@ -177,24 +208,6 @@ class Info extends Component {
             </Col>
           </FormItem>
           <FormItem {...formItemLayout} >
-            <Col {...colTwiceLayout} style={{ marginBottom: '16px' }}>
-              <FormItem label="เพศ">
-                {getFieldDecorator('gender', {
-                  rules: [{ required: true, message: 'กรุณาระบุเพศ' }],
-                  onChange: e => this.changeCheckButton(e, 'gender'),
-                  initialValue: props.gender.value,
-                })(
-                  <RadioGroup style={{ float: 'left' }}>
-                    <RadioButton value="male">ชาย</RadioButton>
-                    <RadioButton value="female">หญิง</RadioButton>
-                  </RadioGroup>)}
-              </FormItem>
-            </Col>
-            <Col span={2}>
-              <span style={{ display: 'inline-block', width: '100%', textAlign: 'center' }}>
-                &nbsp;
-              </span>
-            </Col>
             <Col {...colTwiceLayout} style={{ marginBottom: '16px' }}>
               <FormItem {...formItemLayout}>
                 <Col {...colTrippleLayout} style={{ marginBottom: '16px' }}>
@@ -264,6 +277,41 @@ class Info extends Component {
                 </Col>
               </FormItem>
             </Col>
+            <Col span={2}>
+              <span style={{ display: 'inline-block', width: '100%', textAlign: 'center' }}>
+                &nbsp;
+              </span>
+            </Col>
+            <Col {...colTwiceLayout} style={{ marginBottom: '16px' }}>
+              <FormItem {...formItemLayout}>
+                <Col {...colTwiceLayout} style={{ marginBottom: '16px' }}>
+                  <FormItem label="เพศ">
+                    {getFieldDecorator('gender', {
+                      rules: [{ required: true, message: 'กรุณาระบุเพศ' }],
+                      onChange: e => this.changeCheckButton(e, 'gender'),
+                      initialValue: props.gender.value,
+                    })(
+                      <RadioGroup style={{ float: 'left' }}>
+                        <RadioButton value="male">ชาย</RadioButton>
+                        <RadioButton value="female">หญิง</RadioButton>
+                      </RadioGroup>)}
+                  </FormItem>
+                </Col>
+                <Col span={1}>
+                  <span style={{ display: 'inline-block', width: '100%', textAlign: 'center' }}>
+                      &nbsp;
+                  </span>
+                </Col>
+                <Col {...colTwiceTailLayout} style={{ marginBottom: '16px' }}>
+                  <FormItem label="อายุ">
+                    {getFieldDecorator('age', {
+                      rules: [{ required: true, message: 'กรุณาระบุอายุ' }],
+                      initialValue: this.state.age,
+                    })(<InputNumber min={5} max={100} readOnly />)}
+                  </FormItem>
+                </Col>
+              </FormItem>
+            </Col>
           </FormItem>
 
           <FormItem {...formItemLayout}>
@@ -294,11 +342,12 @@ class Info extends Component {
 
           <FormItem {...formItemLayout}>
             <Col {...colTwiceLayout} style={{ marginBottom: '16px' }}>
-              <FormItem label="น้ำหนัก">
-                {getFieldDecorator('weight', {
-                  rules: [{ required: true, message: 'กรุณาระบุน้ำหนัก' }],
-                  initialValue: props.weight.value,
-                })(<InputNumber title="info" min={30} max={200} onChange={this.changeWeight} />)}
+              <FormItem {...formItemLayout} label="ผู้ติดต่อกรณีฉุกเฉิน">
+                {getFieldDecorator('lastname', {
+                  rules: [{ required: true, message: 'กรุณาระบุผู้ติดต่อกรณีฉุกเฉิน'}],
+                  onChange: this.inputChangeFunc,
+                  initialValue: props.lastname.value,
+                })(<Input title="info" placeholder="ผู้ติดต่อกรณีฉุกเฉิน" />)}
               </FormItem>
             </Col>
             <Col span={2}>
@@ -307,11 +356,12 @@ class Info extends Component {
               </span>
             </Col>
             <Col {...colTwiceLayout}>
-              <FormItem {...formItemLayout} label="ส่วนสูง">
-                {getFieldDecorator('height', {
-                  rules: [{ required: true, message: 'กรุณาระบุส่วนสูง' }],
-                  initialValue: props.height.value,
-                })(<InputNumber title="info" min={100} max={200} onChange={this.changeHeight} />)}
+              <FormItem {...formItemLayout} label="เบอร์ติดต่อกรณีฉุกเฉิน">
+                {getFieldDecorator('lastname', {
+                  rules: [{ required: true, message: 'กรุณาระบุเบอร์ติดต่อกรณีฉุกเฉิน'}],
+                  onChange: this.inputChangeFunc,
+                  initialValue: props.lastname.value,
+                })(<Input title="info" placeholder="เบอร์ติดต่อกรณีฉุกเฉิน" />)}
               </FormItem>
             </Col>
           </FormItem>
