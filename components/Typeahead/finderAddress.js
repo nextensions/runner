@@ -58,4 +58,4 @@ const resolveResultbyField = (type: string, searchStr: string) => {
 }
 
 exports.resolveResultbyField = resolveResultbyField
-exports.fieldsEnumAddress = fieldsEnum
+exports.fieldsEnum = fieldsEnum

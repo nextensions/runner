@@ -13,9 +13,9 @@ const { Meta } = Card
 const cardLayout = {
   xs: { span: 24 },
   sm: { span: 24 },
-  md: { span: 12 },
-  lg: { span: 12 },
-  xl: { span: 12 },
+  md: { span: 24 },
+  lg: { span: 24 },
+  xl: { span: 24 },
 }
 
 const cardTitle = (step, title) => (
@@ -36,7 +36,9 @@ class RegistrantInfo extends Component {
       firstname: { value: '' },
       lastname: { value: '' },
       gender: { value: 'male' },
-      blood: { value: 'b' },
+      date: { value: '' },
+      month: { value: '' },
+      year: { value: '' },
       religion: { value: 'พุทธ' },
       nationality: { value: 'ไทย' },
       race: { value: 'ไทย' },
@@ -44,24 +46,6 @@ class RegistrantInfo extends Component {
       email: { value: '' },
       weight: { value: '50' },
       height: { value: '150' },
-
-      address: { value: '' },
-      moo: { value: '' },
-      soi: { value: '' },
-      street: { value: '' },
-      subDistrict: { value: '' },
-      district: { value: '' },
-      province: { value: '' },
-      zipcode: { value: '' },
-
-      presentAddress: { value: '' },
-      presentMoo: { value: '' },
-      presentSoi: { value: '' },
-      presentStreet: { value: '' },
-      presentSubDistrict: { value: '' },
-      presentDistrict: { value: '' },
-      presentProvince: { value: '' },
-      presentZipcode: { value: '' },
     },
   }
   componentWillMount() {
@@ -78,7 +62,9 @@ class RegistrantInfo extends Component {
             firstname: { value: info.firstname || this.state.fields.firstname.value },
             lastname: { value: info.lastname || this.state.fields.lastname.value },
             gender: { value: info.gender || this.state.fields.gender.value },
-            blood: { value: info.blood || this.state.fields.blood.value },
+            date: { value: info.date || this.state.fields.date.value },
+            month: { value: info.month || this.state.fields.month.value },
+            year: { value: info.year || this.state.fields.year.value },
             religion: { value: info.religion || this.state.fields.religion.value },
             nationality: { value: info.nationality || this.state.fields.nationality.value },
             race: { value: info.race || this.state.fields.race.value },
@@ -86,52 +72,6 @@ class RegistrantInfo extends Component {
             email: { value: info.email || this.state.fields.email.value },
             weight: { value: info.weight || this.state.fields.weight.value },
             height: { value: info.height || this.state.fields.height.value },
-          },
-        })
-      }
-      if (data.hasOwnProperty('address')) {
-        const { address } = data
-        this.setState({
-          fields: {
-            ...this.state.fields,
-            address: { value: address.address || this.state.fields.address.value },
-            moo: { value: address.moo || this.state.fields.moo.value },
-            soi: { value: address.soi || this.state.fields.soi.value },
-            street: { value: address.street || this.state.fields.street.value },
-
-            subDistrict: { value: address.subDistrict || this.state.fields.subDistrict.value },
-            district: { value: address.district || this.state.fields.district.value },
-            province: { value: address.province || this.state.fields.province.value },
-            zipcode: { value: address.zipcode || this.state.fields.zipcode.value },
-          },
-        })
-      }
-      if (data.hasOwnProperty('presentAddress')) {
-        const { presentAddress } = data
-        this.setState({
-          fields: {
-            ...this.state.fields,
-            presentAddress: {
-              value: presentAddress.presentAddress || this.state.fields.presentAddress.value,
-            },
-            presentMoo: { value: presentAddress.presentMoo || this.state.fields.presentMoo.value },
-            presentSoi: { value: presentAddress.presentSoi || this.state.fields.presentSoi.value },
-            presentStreet: {
-              value: presentAddress.presentStreet || this.state.fields.presentStreet.value,
-            },
-            presentSubDistrict: {
-              value:
-                presentAddress.presentSubDistrict || this.state.fields.presentSubDistrict.value,
-            },
-            presentDistrict: {
-              value: presentAddress.presentDistrict || this.state.fields.presentDistrict.value,
-            },
-            presentProvince: {
-              value: presentAddress.presentProvince || this.state.fields.presentProvince.value,
-            },
-            presentZipcode: {
-              value: presentAddress.presentZipcode || this.state.fields.presentZipcode.value,
-            },
           },
         })
       }
@@ -150,11 +90,6 @@ class RegistrantInfo extends Component {
           <Col {...cardLayout}>
             <Card title={cardTitle('1.1', 'ข้อมูลส่วนตัวของนักเรียน')} bordered={false}>
               <Info {...fields} onChange={this.handleFormChange} />
-            </Card>
-          </Col>
-          <Col {...cardLayout}>
-            <Card title={cardTitle('1.2', 'ข้อมูลที่อยู่ของนักเรียน')} bordered={false}>
-              <Address {...fields} onChange={this.handleFormChange} />
             </Card>
           </Col>
         </Row>

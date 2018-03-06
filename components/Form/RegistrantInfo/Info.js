@@ -1,13 +1,17 @@
 import React, { Component } from 'react'
-import { Form, Input, InputNumber, Row, Col, Radio } from 'antd'
+import { Form, Input, InputNumber, Row, Col, Radio, Select, Button, Icon, Menu } from 'antd'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import moment from 'moment'
 
 import { inputChange } from '../../../actions'
+
+require('moment/locale/th')
 
 const FormItem = Form.Item
 const RadioButton = Radio.Button
 const RadioGroup = Radio.Group
+const Option = Select.Option
 
 const formItemLayout = {
   labelCol: {
@@ -15,7 +19,7 @@ const formItemLayout = {
     sm: { span: 24 },
     md: { span: 24 },
     lg: { span: 24 },
-    xl: { span: 8 },
+    xl: { span: 24 },
   },
   wrapperCol: {
     xs: { span: 24 },
@@ -59,6 +63,22 @@ const colTwiceLayout = {
   xl: { span: 11 },
 }
 
+const colTrippleLayout = {
+  xs: { span: 24 },
+  sm: { span: 24 },
+  md: { span: 7 },
+  lg: { span: 7 },
+  xl: { span: 7 },
+}
+
+const colTrippleTailLayout = {
+  xs: { span: 24 },
+  sm: { span: 24 },
+  md: { span: 8 },
+  lg: { span: 8 },
+  xl: { span: 8 },
+}
+
 
 class Info extends Component {
   constructor(props) {
@@ -88,10 +108,45 @@ class Info extends Component {
     inputChange('info', name, e.target.value)
   }
 
+  changeDate = (value) => {
+    const { inputChange } = this.props
+    inputChange('info', 'date', value)
+  }
+
+  changeMonth = (value) => {
+    const { inputChange } = this.props
+    inputChange('info', 'month', value)
+  }
+
+  changeYear = (value) => {
+    const { inputChange } = this.props
+    inputChange('info', 'year', value)
+  }
+
+  handleChange = (value) => {
+    console.log(`selected ${value}`)
+  }
+
+  handleBlur = () => {
+    console.log('blur')
+  }
+
+  handleFocus = () => {
+    console.log('focus')
+  }
+
+
   render() {
     const { getFieldDecorator } = this.props.form
     const { props } = this
     const { state } = this.props
+
+
+    const dateOptions = [...Array(31).keys()].map(date => <Option key={date+1} value={date+1}>{date+1}</Option>)
+    const monthOptions = moment.months().map(month => <Option key={month} value={month}>{month}</Option>)
+    const yearOptions = [...Array(95).keys()].map(date => <Option key={date+1918} value={date+1918}>{date+1918+543}</Option>)
+
+
     return (
       <Row gutter={16}>
         <Col {...colLayout}>
@@ -140,81 +195,78 @@ class Info extends Component {
                 &nbsp;
               </span>
             </Col>
-            <Col {...colTwiceLayout}>
-              <FormItem {...formItemLayout} label="หมู่เลือด">
-                {getFieldDecorator('blood', {
-                  rules: [{ required: true, message: 'กรุณาระบุหมู่เลือด' }],
-                  onChange: e => this.changeCheckButton(e, 'blood'),
-                  initialValue: props.blood.value,
-                })(
-                  <RadioGroup style={{ float: 'left' }} >
-                    <RadioButton value="o">O</RadioButton>
-                    <RadioButton value="a">A</RadioButton>
-                    <RadioButton value="b">B</RadioButton>
-                    <RadioButton value="ab">AB</RadioButton>
-                  </RadioGroup>)}
+            <Col {...colTwiceLayout} style={{ marginBottom: '16px' }}>
+              <FormItem {...formItemLayout}>
+                <Col {...colTrippleLayout} style={{ marginBottom: '16px' }}>
+                  <FormItem {...formItemLayout} label="วันเกิด">
+                    {getFieldDecorator('date', {
+                      rules: [{ required: true, message: 'กรุณาระบุวันเกิด' }],
+                      onChange: this.changeDate,
+                      initialValue: props.date.value,
+                    })(<Select
+                        showSearch
+                        placeholder="Select a person"
+                        optionFilterProp="children"
+                        onChange={this.handleChange}
+                        onFocus={this.handleFocus}
+                        onBlur={this.handleBlur}
+                      >
+                        {dateOptions}
+                      </Select>)}
+                  </FormItem>
+                </Col>
+                <Col span={1}>
+                  <span style={{ display: 'inline-block', width: '100%', textAlign: 'center' }}>
+                      &nbsp;
+                  </span>
+                </Col>
+                <Col {...colTrippleLayout}>
+                  <FormItem {...formItemLayout} label="เดือนเกิด">
+                    {getFieldDecorator('month', {
+                      rules: [{ required: true, message: 'กรุณาระบุเดือนเกิด' }],
+                      onChange: this.changeMonth,
+                      initialValue: props.month.value,
+                    })(<Select
+                        showSearch
+                        placeholder="Select a person"
+                        optionFilterProp="children"
+                        onChange={this.handleChange}
+                        onFocus={this.handleFocus}
+                        onBlur={this.handleBlur}
+                        filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                      >
+                        {monthOptions}
+                      </Select>)}
+                  </FormItem>
+                </Col>
+                <Col span={1}>
+                  <span style={{ display: 'inline-block', width: '100%', textAlign: 'center' }}>
+                      &nbsp;
+                  </span>
+                </Col>
+                <Col {...colTrippleTailLayout}>
+                  <FormItem {...formItemLayout} label="ปีเกิด">
+                    {getFieldDecorator('year', {
+                      rules: [{ required: true, message: 'กรุณาระบุปีเกิด' }],
+                      onChange: this.changeYear,
+                      initialValue: props.year.value,
+                    })(<Select
+                        showSearch
+                        placeholder="Select a person"
+                        optionFilterProp="children"
+                        onChange={this.handleChange}
+                        onFocus={this.handleFocus}
+                        onBlur={this.handleBlur}
+                      >
+                        {yearOptions}
+                      </Select>)}
+                  </FormItem>
+                </Col>
               </FormItem>
             </Col>
-          </FormItem>
-
-          <FormItem
-            {...formItemLayout}
-            label="ศาสนา"
-          >
-            {getFieldDecorator('religion', {
-              rules: [{ required: true, message: 'กรุณาระบุศาสนา' }],
-              onChange: e => this.changeCheckButton(e, 'religion'),
-              initialValue: props.religion.value,
-            })(
-              <RadioGroup title="info" style={{ float: 'left' }} >
-                <RadioButton value="พุทธ">พุทธ</RadioButton>
-                <RadioButton value="คริสต์">คริสต์</RadioButton>
-                <RadioButton value="อิสลาม">อิสลาม</RadioButton>
-                <RadioButton value="อื่นๆ">อื่นๆ</RadioButton>
-              </RadioGroup>)}
           </FormItem>
 
           <FormItem {...formItemLayout}>
-            <Col {...colTwiceLayout} style={{ marginBottom: '16px' }}>
-              <FormItem label="สัญชาติ">
-                {getFieldDecorator('nationality', {
-                  rules: [{ required: true, message: 'กรุณาระบุสัญชาติ' }],
-                  onChange: this.inputChangeFunc,
-                  initialValue: props.nationality.value,
-                })(<Input title="info" placeholder="สัญชาติ" />)}
-              </FormItem>
-            </Col>
-            <Col span={2}>
-              <span style={{ display: 'inline-block', width: '100%', textAlign: 'center' }}>
-                &nbsp;
-              </span>
-            </Col>
-            <Col {...colTwiceLayout}>
-              <FormItem {...formItemLayout} label="เชื้อชาติ">
-                {getFieldDecorator('race', {
-                  rules: [{ required: true, message: 'กรุณาระบุเชื้อชาติ' }],
-                  onChange: this.inputChangeFunc,
-                  initialValue: props.race.value,
-                })(<Input title="info" placeholder="เชื้อชาติ" />)}
-              </FormItem>
-            </Col>
-          </FormItem>
-
-          <FormItem {...formItemLayout}>
-            <Col {...colTwiceLayout} style={{ marginBottom: '16px' }}>
-              <FormItem {...formItemLayout} label="เบอร์มือถือ">
-                {getFieldDecorator('mobile', {
-                  rules: [{ required: true, message: 'กรุณาระบุเบอร์มือถือ' }],
-                  onChange: this.inputChangeFunc,
-                  initialValue: props.mobile.value,
-                })(<Input title="info" placeholder="เบอร์มือถือ" />)}
-              </FormItem>
-            </Col>
-            <Col span={2}>
-              <span style={{ display: 'inline-block', width: '100%', textAlign: 'center' }}>
-                &nbsp;
-              </span>
-            </Col>
             <Col {...colTwiceLayout}>
               <FormItem {...formItemLayout} label="อีเมล">
                 {getFieldDecorator('email', {
@@ -222,6 +274,20 @@ class Info extends Component {
                   onChange: this.inputChangeFunc,
                   initialValue: props.email.value,
                 })(<Input title="info" placeholder="อีเมล" />)}
+              </FormItem>
+            </Col>
+            <Col span={2}>
+              <span style={{ display: 'inline-block', width: '100%', textAlign: 'center' }}>
+                &nbsp;
+              </span>
+            </Col>
+            <Col {...colTwiceLayout} style={{ marginBottom: '16px' }}>
+              <FormItem {...formItemLayout} label="เบอร์มือถือ">
+                {getFieldDecorator('mobile', {
+                  rules: [{ required: true, message: 'กรุณาระบุเบอร์มือถือ' }],
+                  onChange: this.inputChangeFunc,
+                  initialValue: props.mobile.value,
+                })(<Input title="info" placeholder="เบอร์มือถือ" />)}
               </FormItem>
             </Col>
           </FormItem>

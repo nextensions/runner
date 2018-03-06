@@ -5,6 +5,7 @@ import { bindActionCreators } from 'redux'
 
 import { inputChange } from '../../../actions'
 import Typeahead from '../../Typeahead/'
+import { fieldsEnum, resolveResultbyField } from '../../Typeahead/finderAddress'
 
 const FormItem = Form.Item
 
@@ -104,10 +105,10 @@ class Address extends Component {
       inputChange('presentAddress', 'presentSoi', this.props.soi.value)
       inputChange('presentAddress', 'presentStreet', this.props.street.value)
 
-      inputChange('presentAddress', 'presentSubDistrict', this.state.subDistrict)
-      inputChange('presentAddress', 'presentDistrict', this.state.district)
-      inputChange('presentAddress', 'presentProvince', this.state.province)
-      inputChange('presentAddress', 'presentZipcode', this.state.zipcode)
+      // inputChange('presentAddress', 'presentSubDistrict', this.state.subDistrict)
+      // inputChange('presentAddress', 'presentDistrict', this.state.district)
+      // inputChange('presentAddress', 'presentProvince', this.state.province)
+      // inputChange('presentAddress', 'presentZipcode', this.state.zipcode)
     }
   }
   handleChangeAddress = (address) => {
@@ -166,6 +167,13 @@ class Address extends Component {
       p: props.province.value,
       z: props.zipcode.value,
     }
+
+    // const defaultAddress = {
+    //   a: '',
+    //   d: '',
+    //   p: '',
+    //   z: '',
+    // }
 
     const defaultPresentAddress = {
       a: props.presentSubDistrict.value,
@@ -230,9 +238,11 @@ class Address extends Component {
               </FormItem>
             </Col>
           </FormItem>
-          { /*
+
           <Typeahead
             kind="address"
+            fieldsEnum={fieldsEnum}
+            resolveResultbyField={resolveResultbyField}
             renderResult={(data) => {
               const provinceLabel = data.p === 'กรุงเทพมหานคร' ? '' : 'จังหวัด'
               const districtLabel = data.p === 'กรุงเทพมหานคร' ? 'เขต' : 'อำเภอ'
@@ -250,7 +260,7 @@ class Address extends Component {
             onAddressSelected={addressObject => this.handleChangeAddress(addressObject)}
             defaultAddress={defaultAddress}
           />
-          */}
+
 
           <Divider style={{ marginTop: 0 }}>ที่อยู่ปัจจุบัน</Divider>
           <Row>

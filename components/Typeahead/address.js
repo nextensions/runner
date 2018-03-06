@@ -2,8 +2,8 @@ import { compose, withState, withProps, lifecycle, defaultProps } from 'recompos
 import React, { Component } from 'react'
 
 import Typeahead from './typeahead'
-import { resolveSchoolResultbyField } from './finderSchool'
-import { resolveResultbyField } from './finderAddress'
+// import { resolveSchoolResultbyField } from './finderSchool'
+// import { resolveResultbyField } from './finderAddress'
 
 type AddressInputType = {
   // local state
@@ -23,7 +23,14 @@ type AddressInputType = {
 }
 const AddressTypeaheadComponent = (props: AddressInputType) => {
   const {
-    searchStr, setSearchStr, fieldType, options, label, value, kind,
+    searchStr,
+    setSearchStr,
+    fieldType,
+    options,
+    label,
+    value,
+    kind,
+    resolveResultbyField,
   } = props
   if (!fieldType) {
     console.warn('No field type provide')
@@ -60,12 +67,9 @@ const AddressTypeahead: Component<AddressInputType> = compose(
     },
   }),
   withProps(({
-    searchStr, fieldType, value, kind,
+    searchStr, fieldType, value, kind, resolveResultbyField,
   }) => ({
-    options:
-      kind === 'school'
-        ? resolveSchoolResultbyField(fieldType, searchStr.length ? searchStr : value)
-        : resolveResultbyField(fieldType, searchStr.length ? searchStr : value),
+    options: resolveResultbyField(fieldType, searchStr.length ? searchStr : value),
   })),
   defaultProps({
     renderResult: data => <span>{` » ${data.d} » ${data.a} » ${data.p}`}</span>,

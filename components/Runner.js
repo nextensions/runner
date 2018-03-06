@@ -28,19 +28,19 @@ class StudentProfile extends Component {
   render() {
     const stepContent = [
       {
-        title: 'นักเรียน',
+        title: 'นักวิ่ง',
         content: <RegistrantInfo data={this.props.data} />,
       },
       {
-        title: 'การศึกษา',
+        title: 'ประเภท',
         content: <Education data={this.props.data} />,
       },
       {
-        title: 'ผู้ปกครอง',
+        title: 'เสื้อ และการจัดส่ง',
         content: 'form Parent',
       },
       {
-        title: 'แผนที่และการเดินทาง',
+        title: 'ชำระเงิน',
         content: 'form Map',
       },
     ]
@@ -48,9 +48,6 @@ class StudentProfile extends Component {
     return (
       <div>
         <RegisterForm stepContent={stepContent} />
-        {/* <Profile />
-        <Profile />
-        <Address /> */}
       </div>
     )
   }

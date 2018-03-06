@@ -1,7 +1,7 @@
 import React from 'react'
-import { Form, Input, Row, Col, Radio, Divider } from 'antd'
-import { fieldsEnumAddress } from './finderAddress'
-import { fieldsEnumSchool } from './finderSchool'
+import { Form, Col } from 'antd'
+// import { fieldsEnumAddress } from './finderAddress'
+// import { fieldsEnumSchool } from './finderSchool'
 import AddressTypeahead from './address'
 
 type AddressFormInputPropType = {
@@ -83,7 +83,7 @@ class AddressForm extends React.Component {
   props: AddressFormInputPropType
   render() {
     const { addressObj } = this.state
-    const { defaultAddress, kind } = this.props
+    const { defaultAddress, kind, fieldsEnum, resolveResultbyField } = this.props
     const autoFields = []
 
     const defaultAddressArr = Object.keys(defaultAddress).map((key) => {
@@ -91,7 +91,7 @@ class AddressForm extends React.Component {
       return [key, value]
     })
 
-    const fieldsEnum = kind === 'school' ? fieldsEnumSchool : fieldsEnumAddress
+    // const fieldsEnum = kind === 'school' ? fieldsEnumSchool : fieldsEnumAddress
 
     return (
       <FormItem style={{ marginBottom: 0 }}>
@@ -173,6 +173,7 @@ class AddressForm extends React.Component {
               key={key}
               label={name}
               kind={kind}
+              resolveResultbyField={resolveResultbyField}
               renderResult={this.props.renderResult}
               onOptionSelected={(result) => {
                 this.setAddressObj(result)

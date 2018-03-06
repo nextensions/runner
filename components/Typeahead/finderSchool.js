@@ -1,6 +1,6 @@
 import JQL from 'jqljs'
 
-const fieldsEnumSchool = {
+const fieldsEnum = {
   SCHOOL: 's',
   DISTRICT: 'd',
   AMPHOE: 'a',
@@ -52,7 +52,7 @@ const preprocess = (data) => {
 }
 const DB = new JQL(preprocess(require('../../static/school.json')))
 
-const resolveSchoolResultbyField = (type: string, searchStr: string) => {
+const resolveResultbyField = (type: string, searchStr: string) => {
   let possibles = []
   try {
     possibles = DB.select('*')
@@ -66,4 +66,4 @@ const resolveSchoolResultbyField = (type: string, searchStr: string) => {
   return possibles
 }
 
-export { resolveSchoolResultbyField, fieldsEnumSchool }
+export { resolveResultbyField, fieldsEnum }

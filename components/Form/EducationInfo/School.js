@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux'
 
 import { inputChange } from '../../../actions'
 import Typeahead from '../../Typeahead/'
+import { fieldsEnum, resolveResultbyField } from '../../Typeahead/finderSchool'
 
 const FormItem = Form.Item
 
@@ -184,6 +185,8 @@ const Address = Form.create({
       <Col {...colLayout}>
         <Typeahead
           kind="school"
+          fieldsEnum={fieldsEnum}
+          resolveResultbyField={resolveResultbyField}
           renderResult={(data) => {
             const provinceLabel = data.p === 'กรุงเทพมหานคร' ? '' : 'จังหวัด'
             const districtLabel = data.p === 'กรุงเทพมหานคร' ? '' : 'อำเภอ'
