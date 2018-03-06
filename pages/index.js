@@ -31,8 +31,9 @@ class Admission extends Component {
               style={{ lineHeight: '64px' }}
             >
               <Menu.Item key="1">แบบฟอร์มรับสมัคร</Menu.Item>
-              <Menu.Item key="2">E-Ticket</Menu.Item>
+              <Menu.Item key="2">E-Ticket (สำหรับรับเสื้อหน้างาน)</Menu.Item>
               <Menu.Item key="3">ขั้นตอนการสมัคร</Menu.Item>
+              <Menu.Item key="4">รายละเอียดโครงการ</Menu.Item>
             </Menu>
           </Header>
           <Content style={{ padding: '0 50px' }}>

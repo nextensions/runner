@@ -6,7 +6,7 @@ import { bindActionCreators } from 'redux'
 import { keepData, fetchData } from '../../../actions'
 import { initStore } from '../../../store'
 import Info from './Info'
-import Address from './Address'
+import Class from './Class'
 
 const { Meta } = Card
 
@@ -36,7 +36,7 @@ class RegistrantInfo extends Component {
       firstname: { value: '' },
       lastname: { value: '' },
       gender: { value: 'male' },
-      age: { value: '' },
+      age: { value: '18' },
       date: { value: '' },
       month: { value: '' },
       year: { value: '' },
@@ -92,7 +92,10 @@ class RegistrantInfo extends Component {
       <Form layout="vertical" onSubmit={this.handleSubmit}>
         <Row gutter={16}>
           <Col {...cardLayout}>
-            <Card title={cardTitle('1.1', 'ข้อมูลส่วนตัวของนักเรียน')} bordered={false}>
+            <Card
+              title={cardTitle('1.1', 'ข้อมูลส่วนตัว และผู้ติดต่อกรณีฉุกเฉิน')}
+              bordered={false}
+            >
               <Info {...fields} onChange={this.handleFormChange} />
             </Card>
           </Col>

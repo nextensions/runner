@@ -23,6 +23,7 @@ import FormIndex from '../components/Form/'
 import RegisterForm from '../components/Form/Register'
 import RegistrantInfo from '../components/Form/RegistrantInfo/'
 import Education from '../components/Form/EducationInfo'
+import Class from '../components/Form/ClassInfo'
 
 class StudentProfile extends Component {
   render() {
@@ -33,11 +34,11 @@ class StudentProfile extends Component {
       },
       {
         title: 'ประเภท',
-        content: <Education data={this.props.data} />,
+        content: <Class data={this.props.data} />,
       },
       {
-        title: 'เสื้อ และการจัดส่ง',
-        content: 'form Parent',
+        title: 'เสื้อ',
+        content: <Education data={this.props.data} />,
       },
       {
         title: 'ชำระเงิน',
