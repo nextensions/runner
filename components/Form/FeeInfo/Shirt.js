@@ -1,4 +1,4 @@
-import { Form, Input, Row, Col, Radio, Divider, Tooltip } from 'antd'
+import { Card, Form, Input, Row, Col, Radio, Divider, Tooltip, Modal } from 'antd'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
@@ -9,6 +9,7 @@ import { fieldsEnum, resolveResultbyField } from '../../Typeahead/finderSchool'
 const FormItem = Form.Item
 const RadioButton = Radio.Button
 const RadioGroup = Radio.Group
+const { Meta } = Card
 
 const formItemLayout = {
   labelCol: {
@@ -81,19 +82,15 @@ const mapDispatchToProps = dispatch => ({
   inputChange: bindActionCreators(inputChange, dispatch),
 })
 
-const Class = Form.create({
+const Shirt = Form.create({
   onFieldsChange(props, changedFields) {
     props.onChange(changedFields)
   },
   mapPropsToFields(props) {
     return {
-      class: Form.createFormField({
-        ...props.class,
-        value: props.class.value,
-      }),
-      distance: Form.createFormField({
-        ...props.distance,
-        value: props.distance.value,
+      size: Form.createFormField({
+        ...props.size,
+        value: props.size.value,
       }),
     }
   },
@@ -123,32 +120,39 @@ const Class = Form.create({
     inputChange('info', name, e.target.value)
   }
 
+  const defaultAddress = {
+    s: props.prev_edu_name,
+    a: props.prev_edu_sub_district,
+    d: props.prev_edu_district,
+    p: props.prev_edu_province,
+  }
+
+  const modalShirt = () => {
+    const modal = Modal.success({
+      title: 'This is a notification message',
+      content: 'This modal will be destroyed after 1 second',
+    })
+    // setTimeout(() => modal.destroy(), 1000)
+  }
+
   return (
-    <Row gutter={16}>
+    <Row gutter={16} justify="center" type="flex">
       <Col {...colLayout}>
-        <FormItem label="ประเภท">
-          {getFieldDecorator('class', {
-            rules: [{ required: true, message: 'กรุณาระบุประเภท' }],
-            onChange: e => changeCheckButton(e, 'class'),
-            initialValue: props.class.value,
+        <img alt="example" src="static/images/shirt.png" style={{width: "100%"}} onClick={modalShirt} />
+        <FormItem label="ขนาดเสื้อ">
+          {getFieldDecorator('size', {
+            rules: [{ required: true, message: 'กรุณาระบุขนาดเสื้อ' }],
+            onChange: e => changeCheckButton(e, 'size'),
+            initialValue: props.size.value,
           })(
             <RadioGroup style={{ float: 'left' }}>
-              <Tooltip title="200 บาท"><RadioButton value="นักเรียน"><strong>นักเรียน</strong> (200 บาท)</RadioButton></Tooltip>
-              <Tooltip title="400 บาท"><RadioButton value="ประชาชน"><strong>ประชาชน</strong> (400 บาท)</RadioButton></Tooltip>
-              <Tooltip title="1,000 บาท"><RadioButton value="vip"><strong>VIP</strong> (1,000 บาท)</RadioButton></Tooltip>
-              <Tooltip title="400 บาท"><RadioButton value="แฟนซี"><strong>แฟนซี</strong> (400 บาท)</RadioButton></Tooltip>
-            </RadioGroup>)}
-        </FormItem>
-        <FormItem label="ระยะทาง">
-          {getFieldDecorator('distance', {
-            rules: [{ required: true, message: 'กรุณาระบุระยะทาง' }],
-            onChange: e => changeCheckButton(e, 'distance'),
-            initialValue: props.distance.value,
-          })(
-            <RadioGroup style={{ float: 'left' }}>
-              <Tooltip title="คำอธิบายสั้นๆ"><RadioButton value="3K">3 กิโลเมตร</RadioButton></Tooltip>
-              <Tooltip title="คำอธิบายสั้นๆ"><RadioButton value="5K">5 กิโลเมตร</RadioButton></Tooltip>
-              <Tooltip title="คำอธิบายสั้นๆ"><RadioButton value="10K">10 กิโลเมตร</RadioButton></Tooltip>
+              <Tooltip title={`รอบอก 34"`}><RadioButton value="SS"><strong>SS</strong> (34")</RadioButton></Tooltip>
+              <Tooltip title={`รอบอก 36"`}><RadioButton value="S"><strong>S</strong> (36")</RadioButton></Tooltip>
+              <Tooltip title={`รอบอก 38"`}><RadioButton value="M"><strong>M</strong> (38")</RadioButton></Tooltip>
+              <Tooltip title={`รอบอก 40"`}><RadioButton value="L"><strong>L</strong> (40")</RadioButton></Tooltip>
+              <Tooltip title={`รอบอก 42"`}><RadioButton value="XL"><strong>XL</strong> (42")</RadioButton></Tooltip>
+              <Tooltip title={`รอบอก 44"`}><RadioButton value="2XL"><strong>2XL</strong> (44")</RadioButton></Tooltip>
+              <Tooltip title={`รอบอก 46"`}><RadioButton value="3XL"><strong>3XL</strong> (46")</RadioButton></Tooltip>
             </RadioGroup>)}
         </FormItem>
       </Col>
@@ -156,4 +160,4 @@ const Class = Form.create({
   )
 }))
 
-export default Class
+export default Shirt

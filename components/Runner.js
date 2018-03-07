@@ -24,6 +24,8 @@ import RegisterForm from '../components/Form/Register'
 import RegistrantInfo from '../components/Form/RegistrantInfo/'
 import Education from '../components/Form/EducationInfo'
 import Class from '../components/Form/ClassInfo'
+import Fee from '../components/Form/FeeInfo'
+import Payment from '../components/Form/Payment'
 
 class StudentProfile extends Component {
   render() {
@@ -38,11 +40,11 @@ class StudentProfile extends Component {
       },
       {
         title: 'เสื้อ',
-        content: <Education data={this.props.data} />,
+        content: <Fee data={this.props.data} />,
       },
       {
         title: 'ชำระเงิน',
-        content: 'form Map',
+        content: <Payment data={this.props.data} />,
       },
     ]
 

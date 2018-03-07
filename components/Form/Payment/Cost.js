@@ -1,4 +1,4 @@
-import { Form, Input, Row, Col, Radio, Divider, Tooltip } from 'antd'
+import { Card, Form, Input, Row, Col, Radio, Divider, Tooltip, Modal, Collapse } from 'antd'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
@@ -9,6 +9,7 @@ import { fieldsEnum, resolveResultbyField } from '../../Typeahead/finderSchool'
 const FormItem = Form.Item
 const RadioButton = Radio.Button
 const RadioGroup = Radio.Group
+const Panel = Collapse.Panel
 
 const formItemLayout = {
   labelCol: {
@@ -76,24 +77,25 @@ const colTrippleTailLayout = {
   xl: { span: 8 },
 }
 
+const text = `
+  A dog is a type of domesticated animal.
+  Known for its loyalty and faithfulness,
+  it can be found as a welcome guest in many households across the world.
+`
 
 const mapDispatchToProps = dispatch => ({
   inputChange: bindActionCreators(inputChange, dispatch),
 })
 
-const Class = Form.create({
+const Cost = Form.create({
   onFieldsChange(props, changedFields) {
     props.onChange(changedFields)
   },
   mapPropsToFields(props) {
     return {
-      class: Form.createFormField({
-        ...props.class,
-        value: props.class.value,
-      }),
-      distance: Form.createFormField({
-        ...props.distance,
-        value: props.distance.value,
+      size: Form.createFormField({
+        ...props.size,
+        value: props.size.value,
       }),
     }
   },
@@ -123,37 +125,56 @@ const Class = Form.create({
     inputChange('info', name, e.target.value)
   }
 
+  const defaultAddress = {
+    s: props.prev_edu_name,
+    a: props.prev_edu_sub_district,
+    d: props.prev_edu_district,
+    p: props.prev_edu_province,
+  }
+
+  const modalShirt = () => {
+    const modal = Modal.success({
+      title: 'This is a notification message',
+      content: 'This modal will be destroyed after 1 second',
+    })
+    // setTimeout(() => modal.destroy(), 1000)
+  }
+
+  const callback = (key) => {
+    console.log(key)
+  }
+
   return (
-    <Row gutter={16}>
+    <Row type="flex" justify="end">
       <Col {...colLayout}>
-        <FormItem label="ประเภท">
-          {getFieldDecorator('class', {
-            rules: [{ required: true, message: 'กรุณาระบุประเภท' }],
-            onChange: e => changeCheckButton(e, 'class'),
-            initialValue: props.class.value,
-          })(
-            <RadioGroup style={{ float: 'left' }}>
-              <Tooltip title="200 บาท"><RadioButton value="นักเรียน"><strong>นักเรียน</strong> (200 บาท)</RadioButton></Tooltip>
-              <Tooltip title="400 บาท"><RadioButton value="ประชาชน"><strong>ประชาชน</strong> (400 บาท)</RadioButton></Tooltip>
-              <Tooltip title="1,000 บาท"><RadioButton value="vip"><strong>VIP</strong> (1,000 บาท)</RadioButton></Tooltip>
-              <Tooltip title="400 บาท"><RadioButton value="แฟนซี"><strong>แฟนซี</strong> (400 บาท)</RadioButton></Tooltip>
-            </RadioGroup>)}
-        </FormItem>
-        <FormItem label="ระยะทาง">
-          {getFieldDecorator('distance', {
-            rules: [{ required: true, message: 'กรุณาระบุระยะทาง' }],
-            onChange: e => changeCheckButton(e, 'distance'),
-            initialValue: props.distance.value,
-          })(
-            <RadioGroup style={{ float: 'left' }}>
-              <Tooltip title="คำอธิบายสั้นๆ"><RadioButton value="3K">3 กิโลเมตร</RadioButton></Tooltip>
-              <Tooltip title="คำอธิบายสั้นๆ"><RadioButton value="5K">5 กิโลเมตร</RadioButton></Tooltip>
-              <Tooltip title="คำอธิบายสั้นๆ"><RadioButton value="10K">10 กิโลเมตร</RadioButton></Tooltip>
-            </RadioGroup>)}
-        </FormItem>
+        <Collapse defaultActiveKey={['1', '2']} onChange={callback}>
+          <Panel header="ค่าสมัครวิ่ง" key="1">
+            <Row type="flex" justify="end">
+              <Col span={12}>ประเภท VIP ระยะทาง 10 กิโลเมตร</Col>
+              <Col span={12} align="right">
+                <strong>1,000 บาท</strong>
+              </Col>
+            </Row>
+          </Panel>
+          <Panel header="ค่าจัดส่งเสื้อ และเบอร์ BIB" key="2">
+            <Row type="flex" justify="end">
+              <Col span={12}>ไซต์ L (รอบอก 40") 1 ตัว</Col>
+              <Col span={12} align="right">
+                <strong>65 บาท</strong>
+              </Col>
+            </Row>
+          </Panel>
+          <Panel header="รวมทั้งสิ้น" key="2">
+            <Row type="flex" justify="end">
+              <Col span={12} align="right">
+                <strong>1,065 บาท</strong>
+              </Col>
+            </Row>
+          </Panel>
+        </Collapse>
       </Col>
     </Row>
   )
 }))
 
-export default Class
+export default Cost

@@ -6,7 +6,6 @@ import { bindActionCreators } from 'redux'
 import { keepData, fetchData } from '../../../actions'
 import { initStore } from '../../../store'
 import Info from './Info'
-import Class from './Class'
 
 const { Meta } = Card
 
@@ -35,18 +34,15 @@ class RegistrantInfo extends Component {
     fields: {
       firstname: { value: '' },
       lastname: { value: '' },
-      gender: { value: 'male' },
-      age: { value: '18' },
+      email: { value: '' },
+      mobile: { value: '' },
+      gender: { value: '' },
+      age: { value: '' },
       date: { value: '' },
       month: { value: '' },
       year: { value: '' },
-      religion: { value: 'พุทธ' },
-      nationality: { value: 'ไทย' },
-      race: { value: 'ไทย' },
-      mobile: { value: '' },
-      email: { value: '' },
-      weight: { value: '50' },
-      height: { value: '150' },
+      emer_person: { value: '' },
+      emer_contact: { value: '' },
     },
   }
   componentWillMount() {
@@ -62,6 +58,8 @@ class RegistrantInfo extends Component {
             ...this.state.fields,
             firstname: { value: info.firstname || this.state.fields.firstname.value },
             lastname: { value: info.lastname || this.state.fields.lastname.value },
+            email: { value: info.email || this.state.fields.email.value },
+            mobile: { value: info.mobile || this.state.fields.mobile.value },
             gender: { value: info.gender || this.state.fields.gender.value },
             age: { value: info.age || this.state.fields.age.value },
             date: { value: info.date || this.state.fields.date.value },
@@ -69,13 +67,6 @@ class RegistrantInfo extends Component {
             year: { value: info.year || this.state.fields.year.value },
             emer_person: { value: info.emer_person || this.state.fields.emer_person.value },
             emer_contact: { value: info.emer_contact || this.state.fields.emer_contact.value },
-            religion: { value: info.religion || this.state.fields.religion.value },
-            nationality: { value: info.nationality || this.state.fields.nationality.value },
-            race: { value: info.race || this.state.fields.race.value },
-            mobile: { value: info.mobile || this.state.fields.mobile.value },
-            email: { value: info.email || this.state.fields.email.value },
-            weight: { value: info.weight || this.state.fields.weight.value },
-            height: { value: info.height || this.state.fields.height.value },
           },
         })
       }

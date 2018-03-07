@@ -13,12 +13,12 @@ const steps = [
     content: 'และขนาดเสื้อ',
   },
   {
-    title: 'เสื้อ',
-    content: 'และการจัดส่ง',
+    title: 'สรุปค่าใช้จ่าย',
+    content: 'และวิธีการการจัดส่ง',
   },
   {
-    title: 'ชำระเงิน',
-    content: 'และแจ้งชำระ',
+    title: 'ยืนยันการสมัคร',
+    content: 'และแจ้งชำระเงิน',
   },
 ]
 
@@ -77,7 +77,7 @@ export default class RegisterForm extends Component {
                   onClick={() => message.success('Processing complete!')}
                 >
                   <Icon type="save" />
-                  บันทึก
+                  ยืนยันการสมัครและชำระค่าบริการ
                 </Button>
               )}
             </Col>
