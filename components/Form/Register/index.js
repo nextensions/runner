@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { Steps, Button, message, Icon, Row, Col } from 'antd'
 
+import RegistrantInfo from '../../../components/Form/RegistrantInfo/'
+
 const { Step } = Steps
 
 const steps = [
@@ -40,6 +42,9 @@ export default class RegisterForm extends Component {
   goto(index) {
     const current = index
     this.setState({ current })
+  }
+  changeStep() {
+    console.log('aaa')
   }
   render() {
     const { current } = this.state

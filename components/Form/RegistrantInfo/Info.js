@@ -172,6 +172,12 @@ class Info extends Component {
     console.log('focus')
   }
 
+  handleChangeStep = () => {
+    console.log(this.props)
+    this.props.form.validateFields(['firstname'], { force: true })
+    this.props.form.validateFields(['emer_contact'], { force: true })
+    this.props.changeStep()
+  }
 
   render() {
     const { getFieldDecorator } = this.props.form
@@ -191,16 +197,9 @@ class Info extends Component {
             <Col {...colTwiceLayout} style={{ marginBottom: '16px' }}>
               <FormItem {...formItemLayout} label="ชื่อ">
                 {getFieldDecorator('firstname', {
-                  // rules: [{ required: true, message: 'กรุณาระบุชื่อ' }],
+                  rules: [{ required: true, message: 'กรุณาระบุชื่อ' }],
                   onChange: this.inputChangeFunc,
                   initialValue: props.firstname.value,
-                  validate: [{
-                    trigger: ['onBlur'],
-                    rules: [{
-                      required: true,
-                      message: 'กรุณาระบุชื่อ',
-                    }],
-                  }],
                 })(<Input title="info" placeholder="ชื่อ" maxLength="255" />)}
               </FormItem>
             </Col>
@@ -216,7 +215,7 @@ class Info extends Component {
                   onChange: this.inputChangeFunc,
                   initialValue: props.lastname.value,
                   validate: [{
-                    trigger: ['onBlur'],
+                    // trigger: ['onBlur'],
                     rules: [{
                       required: true,
                       message: 'กรุณาระบุนามสกุล',
@@ -236,7 +235,7 @@ class Info extends Component {
                       onChange: this.changeDate,
                       initialValue: props.date.value,
                       validate: [{
-                        trigger: ['onBlur', 'onChange'],
+                        // trigger: ['onBlur'],
                         rules: [{
                           required: true,
                           message: 'กรุณาระบุวันเกิด',
@@ -266,7 +265,7 @@ class Info extends Component {
                       onChange: this.changeMonth,
                       initialValue: props.month.value,
                       validate: [{
-                        trigger: ['onBlur', 'onChange'],
+                        // trigger: ['onBlur'],
                         rules: [{
                           required: true,
                           message: 'กรุณาระบุเดือนเกิด',
@@ -297,7 +296,7 @@ class Info extends Component {
                       onChange: this.changeYear,
                       initialValue: props.year.value,
                       validate: [{
-                        trigger: ['onBlur', 'onChange'],
+                        // trigger: ['onBlur'],
                         rules: [{
                           required: true,
                           message: 'กรุณาระบุปีเกิด',
@@ -331,7 +330,7 @@ class Info extends Component {
                       onChange: e => this.changeCheckButton(e, 'gender'),
                       initialValue: props.gender.value,
                       validate: [{
-                        trigger: ['onBlur', 'onChange'],
+                        // trigger: ['onBlur'],
                         rules: [{
                           required: true,
                           message: 'กรุณาระบุเพศ',
@@ -355,7 +354,7 @@ class Info extends Component {
                       // rules: [{ required: true, message: 'กรุณาระบุวันเดือนปีเกิดเพื่อคำนวนอายุ' }],
                       initialValue: this.state.age,
                       validate: [{
-                        trigger: ['onBlur', 'onChange'],
+                        // trigger: ['onBlur'],
                         rules: [{
                           required: true,
                           message: 'กรุณาระบุวันเดือนปีเกิดเพื่อคำนวนอายุ',
@@ -381,7 +380,7 @@ class Info extends Component {
                       required: true,
                     }],
                   }, {
-                    trigger: ['onBlur', 'onChange'],
+                    // trigger: ['onBlur'],
                     rules: [{
                       type: 'email',
                       message: 'กรุณาระบุอีเมล',
@@ -402,7 +401,7 @@ class Info extends Component {
                   onChange: this.inputChangeFunc,
                   initialValue: props.mobile.value,
                   validate: [{
-                    trigger: ['onBlur', 'onChange'],
+                    // trigger: ['onBlur'],
                     rules: [{
                       required: true,
                       type: 'string',
@@ -424,7 +423,7 @@ class Info extends Component {
                   onChange: this.inputChangeFunc,
                   initialValue: props.emer_person.value,
                   validate: [{
-                    trigger: ['onBlur', 'onChange'],
+                    // trigger: ['onBlur'],
                     rules: [{
                       required: true,
                       message: 'กรุณาระบุชื่อผู้ติดต่อกรณีฉุกเฉิน',
@@ -441,23 +440,22 @@ class Info extends Component {
             <Col {...colTwiceLayout}>
               <FormItem {...formItemLayout} label="เบอร์มือถือติดต่อกรณีฉุกเฉิน">
                 {getFieldDecorator('emer_contact', {
-                  // rules: [{ required: true, message: 'กรุณาระบุเบอร์ติดต่อกรณีฉุกเฉิน' }],
+                  rules: [{ required: true, type: 'string',
+                  pattern: /^\(?(\d{2,3})\)?[-. ]?(\d{3,4})[-. ]?([0-9]{4})$/,
+                  len: 10, message: 'กรุณาระบุเบอร์ติดต่อกรณีฉุกเฉิน' }],
                   onChange: this.inputChangeFunc,
                   initialValue: props.emer_contact.value,
-                  validate: [{
-                    trigger: ['onBlur', 'onChange'],
-                    rules: [{
-                      required: true,
-                      type: 'string',
-                      pattern: /^\(?(\d{2,3})\)?[-. ]?(\d{3,4})[-. ]?([0-9]{4})$/,
-                      len: 10,
-                      message: 'กรุณาระบุเบอร์มือถือติดต่อกรณีฉุกเฉิน',
-                    }],
-                  }],
                 })(<Input title="info" placeholder="เบอร์มือถือติดต่อกรณีฉุกเฉิน" maxLength="10" />)}
               </FormItem>
             </Col>
           </FormItem>
+
+
+
+
+          <Button type="primary" size="large" onClick={() => this.handleChangeStep()}>
+                  ต่อไป<Icon type="right" />
+                </Button>
         </Col>
       </Row>
     )

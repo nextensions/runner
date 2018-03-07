@@ -45,6 +45,11 @@ class RegistrantInfo extends Component {
       emer_contact: { value: '' },
     },
   }
+
+  constructor(props) {
+    super(props)
+  }
+
   componentWillMount() {
     const { data } = this.props
     this.getData(data)
@@ -77,6 +82,9 @@ class RegistrantInfo extends Component {
       fields: { ...this.state.fields, ...changedFields },
     })
   }
+  changeStep() {
+    this.props.changeStep()
+  }
   render() {
     const { fields } = this.state
     return (
@@ -87,7 +95,7 @@ class RegistrantInfo extends Component {
               title={cardTitle('1.1', 'ข้อมูลส่วนตัว และผู้ติดต่อกรณีฉุกเฉิน')}
               bordered={false}
             >
-              <Info {...fields} onChange={this.handleFormChange} />
+              <Info {...fields} onChange={this.handleFormChange} changeStep={this.changeStep} />
             </Card>
           </Col>
         </Row>
@@ -98,6 +106,7 @@ class RegistrantInfo extends Component {
 
 const mapDispatchToProps = dispatch => ({
   handleFormChange: bindActionCreators(keepData, dispatch),
+  changeStep: bindActionCreators(keepData, dispatch),
 })
 
 export default connect(null, mapDispatchToProps)(RegistrantInfo)

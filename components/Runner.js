@@ -32,7 +32,7 @@ class StudentProfile extends Component {
     const stepContent = [
       {
         title: 'นักวิ่ง',
-        content: <RegistrantInfo data={this.props.data} />,
+        content: <RegistrantInfo data={this.props.data} changeStep={() => console.log('ooo')} />,
       },
       {
         title: 'ประเภท',
