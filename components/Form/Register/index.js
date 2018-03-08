@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Steps, Button, message, Icon, Row, Col } from 'antd'
-
-import RegistrantInfo from '../../../components/Form/RegistrantInfo/'
+import { connect } from 'react-redux'
 
 const { Step } = Steps
 
@@ -24,7 +23,14 @@ const steps = [
   },
 ]
 
-export default class RegisterForm extends Component {
+class RegisterForm extends Component {
+  static async getInitialProps({
+    store, isServer, pathname, query,
+  }) {
+    const data = await store.getState().data
+    return { data }
+  }
+
   constructor(props) {
     super(props)
     this.state = {
@@ -33,7 +39,18 @@ export default class RegisterForm extends Component {
   }
   next() {
     const current = this.state.current + 1
-    this.setState({ current })
+    const { data } = this.props.state
+
+    if (current === 1) {
+      const { info } = this.props.state.data
+      if (typeof info !== 'undefined') {
+        if (info.firstname && info.lastname) {
+          this.setState({ current })
+          return
+        }
+      }
+      message.warning('กรุณากรอกข้อมูลให้ครบถ้วน')
+    }
   }
   prev() {
     const current = this.state.current - 1
@@ -92,3 +109,9 @@ export default class RegisterForm extends Component {
     )
   }
 }
+
+const mapStateToProps = state => ({
+  state,
+})
+
+export default connect(mapStateToProps)(RegisterForm)
