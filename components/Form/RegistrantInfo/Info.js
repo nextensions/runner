@@ -329,7 +329,7 @@ class Info extends Component {
                   <FormItem label="อายุ" help="(คำนวนให้จากปีเกิด)">
                     {getFieldDecorator('age', {
                       rules: [{ required: true, message: 'กรุณาระบุวันเดือนปีเกิดเพื่อคำนวนอายุ' }],
-                      initialValue: this.state.age || this.props.age,
+                      initialValue: this.state.age || props.age.value,
                       // validate: [{
                       //   // trigger: ['onBlur'],
                       //   rules: [{

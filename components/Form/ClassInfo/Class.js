@@ -1,10 +1,12 @@
+import React, { Component } from 'react'
 import { Form, Input, Row, Col, Radio, Divider, Tooltip } from 'antd'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import moment from 'moment'
 
 import { inputChange } from '../../../actions'
-import Typeahead from '../../Typeahead/'
-import { fieldsEnum, resolveResultbyField } from '../../Typeahead/finderSchool'
+
+require('moment/locale/th')
 
 const FormItem = Form.Item
 const RadioButton = Radio.Button
@@ -31,8 +33,8 @@ const formItemTwiceLayout = {
   labelCol: {
     xs: { span: 24 },
     sm: { span: 24 },
-    md: { span: 16 },
-    lg: { span: 16 },
+    md: { span: 8 },
+    lg: { span: 8 },
     xl: { span: 8 },
   },
   wrapperCol: {
@@ -60,6 +62,14 @@ const colTwiceLayout = {
   xl: { span: 11 },
 }
 
+const colTwiceTailLayout = {
+  xs: { span: 24 },
+  sm: { span: 24 },
+  md: { span: 12 },
+  lg: { span: 12 },
+  xl: { span: 12 },
+}
+
 const colTrippleLayout = {
   xs: { span: 24 },
   sm: { span: 24 },
@@ -77,83 +87,120 @@ const colTrippleTailLayout = {
 }
 
 
+class RunnerClass extends Component {
+
+  constructor(props) {
+    super(props)
+    this.inputChangeFunc = this.inputChangeFunc.bind(this)
+  }
+
+  state = {
+    runnerType: [
+      { name: 'เยาวชน', fee: 200, distance: [5] },
+      { name: 'บุคคลทั่วไป', fee: 400, distance: [3, 5, 10] },
+      { name: 'vip', fee: 1000, distance: [3, 5, 10] },
+      { name: 'แฟนซี', fee: 400, distance: [3, 5, 10] },
+    ],
+    type: '',
+    distance: '',
+    size: '',
+  }
+
+  handleSubmit = (e) => {
+    e.preventDefault()
+    this.props.form.validateFields((err, values) => {
+      if (!err) {
+        console.log('Received values of form: ', values)
+      }
+    })
+  }
+
+  handleChange = (value) => {
+    console.log(`selected ${value}`)
+  }
+
+  inputChangeFunc = (e) => {
+    const { inputChange } = this.props
+    const { id, title, value } = e.target
+    inputChange(title, id, value)
+  }
+  changeWeight = (value) => {
+    const { inputChange } = this.props
+    inputChange('info', 'weight', value)
+  }
+
+  changeHeight = (value) => {
+    const { inputChange } = this.props
+    inputChange('info', 'height', value)
+  }
+
+  changeCheckButton = (e, name) => {
+    const { inputChange } = this.props
+    inputChange('info', name, e.target.value)
+  }
+
+  renderRunnerType() {
+    return this.state.runnerType.map(type => (
+      <Tooltip key={type.name} title={`ค่าสมัคร ${type.fee} บาท`}><RadioButton value={type.name}><strong>{type.name}</strong> ({type.fee} บาท)</RadioButton></Tooltip>
+    ))
+  }
+
+  renderRunnerDistance() {
+    const distanceByRunnerType = this.state.runnerType.filter(type => type.name === this.props.type.value)
+
+    if (distanceByRunnerType[0].name === 'เยาวชน') {
+      console.log('เยาวชน')
+    }
+
+    console.log(this.props)
+    return distanceByRunnerType[0].distance.map(distance => (
+      <Tooltip key={distance} title="ระยะทาง {distance}"><RadioButton value={distance}>{distance} กิโลเมตร</RadioButton></Tooltip>
+    ))
+  }
+
+
+  render() {
+    const { getFieldDecorator } = this.props.form
+    const { props } = this
+    const { state } = this
+
+    return (
+      <Row gutter={16}>
+        <Col {...colLayout}>
+          <FormItem label="ประเภท">
+            {getFieldDecorator('type', {
+              rules: [{ required: true, message: 'กรุณาระบุประเภท' }],
+              onChange: e => this.changeCheckButton(e, 'type'),
+              initialValue: props.type.value,
+            })(
+              <RadioGroup style={{ float: 'left' }}>
+                {this.renderRunnerType()}
+              </RadioGroup>)}
+          </FormItem>
+          {this.props.type.value ?
+            <FormItem label="ระยะทาง">
+              {getFieldDecorator('distance', {
+                rules: [{ required: true, message: 'กรุณาระบุระยะทาง' }],
+                onChange: e => this.changeCheckButton(e, 'distance'),
+                initialValue: props.distance.value,
+              })(
+                <RadioGroup style={{ float: 'left' }}>
+                  {this.renderRunnerDistance()}
+                </RadioGroup>)}
+            </FormItem> : null
+          }
+
+        </Col>
+      </Row>
+    )
+  }
+}
+
 const mapDispatchToProps = dispatch => ({
   inputChange: bindActionCreators(inputChange, dispatch),
 })
 
-const Class = Form.create({
+export default Form.create({
   onFieldsChange(props, changedFields) {
     props.onChange(changedFields)
-  },
-  mapPropsToFields(props) {
-    return {
-      class: Form.createFormField({
-        ...props.class,
-        value: props.class.value,
-      }),
-      distance: Form.createFormField({
-        ...props.distance,
-        value: props.distance.value,
-      }),
-    }
-  },
-  onValuesChange(_, values) {
-    console.log(values)
-  },
-})(connect(null, mapDispatchToProps)((props) => {
-  const { getFieldDecorator } = props.form
-
-  const inputChangeFunc = (e) => {
-    const { inputChange } = props
-    const { id, title, value } = e.target
-    inputChange(title, id, value)
-  }
-  const changeWeight = (value) => {
-    const { inputChange } = props
-    inputChange('info', 'weight', value)
-  }
-
-  const changeHeight = (value) => {
-    const { inputChange } = props
-    inputChange('info', 'height', value)
-  }
-
-  const changeCheckButton = (e, name) => {
-    const { inputChange } = props
-    inputChange('info', name, e.target.value)
-  }
-
-  return (
-    <Row gutter={16}>
-      <Col {...colLayout}>
-        <FormItem label="ประเภท">
-          {getFieldDecorator('class', {
-            rules: [{ required: true, message: 'กรุณาระบุประเภท' }],
-            onChange: e => changeCheckButton(e, 'class'),
-            initialValue: props.class.value,
-          })(
-            <RadioGroup style={{ float: 'left' }}>
-              <Tooltip title="200 บาท"><RadioButton value="นักเรียน"><strong>นักเรียน</strong> (200 บาท)</RadioButton></Tooltip>
-              <Tooltip title="400 บาท"><RadioButton value="ประชาชน"><strong>ประชาชน</strong> (400 บาท)</RadioButton></Tooltip>
-              <Tooltip title="1,000 บาท"><RadioButton value="vip"><strong>VIP</strong> (1,000 บาท)</RadioButton></Tooltip>
-              <Tooltip title="400 บาท"><RadioButton value="แฟนซี"><strong>แฟนซี</strong> (400 บาท)</RadioButton></Tooltip>
-            </RadioGroup>)}
-        </FormItem>
-        <FormItem label="ระยะทาง">
-          {getFieldDecorator('distance', {
-            rules: [{ required: true, message: 'กรุณาระบุระยะทาง' }],
-            onChange: e => changeCheckButton(e, 'distance'),
-            initialValue: props.distance.value,
-          })(
-            <RadioGroup style={{ float: 'left' }}>
-              <Tooltip title="คำอธิบายสั้นๆ"><RadioButton value="3K">3 กิโลเมตร</RadioButton></Tooltip>
-              <Tooltip title="คำอธิบายสั้นๆ"><RadioButton value="5K">5 กิโลเมตร</RadioButton></Tooltip>
-              <Tooltip title="คำอธิบายสั้นๆ"><RadioButton value="10K">10 กิโลเมตร</RadioButton></Tooltip>
-            </RadioGroup>)}
-        </FormItem>
-      </Col>
-    </Row>
-  )
-}))
-
-export default Class
+  }})(connect(null, mapDispatchToProps)(RunnerClass))

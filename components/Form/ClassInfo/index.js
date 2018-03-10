@@ -28,10 +28,29 @@ const cardTitle = (step, title) => (
 class EducationInfo extends Component {
   state = {
     fields: {
-      class: { value: '' },
+      type: { value: '' },
       distance: { value: '' },
       size: { value: '' },
     },
+  }
+  componentWillMount() {
+    const { data } = this.props
+    this.getData(data)
+  }
+  getData = async (data) => {
+    if (Object.keys(data).length !== 0 && data.constructor === Object) {
+      if (data.hasOwnProperty('info')) {
+        const { info } = data
+        await this.setState({
+          fields: {
+            ...this.state.fields,
+            type: { value: info.type || this.state.fields.type.value },
+            distance: { value: info.distance || this.state.fields.distance.value },
+            size: { value: info.size || this.state.fields.size.value },
+          },
+        })
+      }
+    }
   }
   handleFormChange = (changedFields) => {
     this.setState({
