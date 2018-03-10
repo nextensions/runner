@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Form, Row, Col, Card } from 'antd'
+import { connect } from 'react-redux'
 
 import Class from './Class'
 import Shirt from './Shirt'
@@ -25,13 +26,22 @@ const cardTitle = (step, title) => (
   </div>
 )
 
-class EducationInfo extends Component {
-  state = {
-    fields: {
-      type: { value: '' },
-      distance: { value: '' },
-      size: { value: '' },
-    },
+class RunnerTypeInfo extends Component {
+  static async getInitialProps({
+    store, isServer, pathname, query,
+  }) {
+    const data = await store.getState().data
+    return { data }
+  }
+  constructor(props) {
+    super(props)
+    this.state = {
+      fields: {
+        type: { value: '' },
+        distance: { value: '' },
+        size: { value: '' },
+      },
+    }
   }
   componentWillMount() {
     const { data } = this.props
@@ -59,13 +69,14 @@ class EducationInfo extends Component {
   }
   render() {
     const { fields } = this.state
-    // console.log(store.getState().data)
+    const { info } = this.props.state.data
+
     return (
       <Form layout="vertical" onSubmit={this.handleSubmit}>
         <Row gutter={16}>
           <Col {...cardLayout}>
             <Card title={cardTitle('2.1', 'ประเภท และระยะทาง')} bordered={false}>
-              <Class {...fields} onChange={this.handleFormChange} />
+              <Class {...fields} onChange={this.handleFormChange} age={info.age} />
             </Card>
           </Col>
           <Col {...cardLayout}>
@@ -79,4 +90,11 @@ class EducationInfo extends Component {
   }
 }
 
-export default EducationInfo
+// export default RunnerTypeInfo
+
+
+const mapStateToProps = state => ({
+  state,
+})
+
+export default connect(mapStateToProps)(RunnerTypeInfo)

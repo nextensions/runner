@@ -96,10 +96,21 @@ class RunnerClass extends Component {
 
   state = {
     runnerType: [
-      { name: 'เยาวชน', fee: 200, distance: [5] },
-      { name: 'บุคคลทั่วไป', fee: 400, distance: [3, 5, 10] },
-      { name: 'vip', fee: 1000, distance: [3, 5, 10] },
-      { name: 'แฟนซี', fee: 400, distance: [3, 5, 10] },
+      { name: 'เยาวชน', fee: 200, distance: [5], age: { min: 4, max: 18 } },
+      { name: 'บุคคลทั่วไป', fee: 400, distance: [3, 5, 10], age: { min: 19, max: 99 } },
+      { name: 'vip', fee: 1000, distance: [3, 5, 10], age: { min: 19, max: 99 } },
+      { name: 'แฟนซี', fee: 400, distance: [3, 5, 10], age: { min: 19, max: 99 } },
+    ],
+    runnerGen: [
+      { min: 4, max: 12, title: 'อายุไม่เกิน 12 ปี' },
+      { min: 13, max: 14, title: 'อายุ 13 - 14 ปี' },
+      { min: 15, max: 16, title: 'อายุ 15 - 16 ปี' },
+      { min: 17, max: 18, title: 'อายุ 17 - 18 ปี' },
+      { min: 19, max: 29, title: 'อายุไม่เกิน 29 ปี' },
+      { min: 30, max: 39, title: 'อายุ 30 - 39 ปี' },
+      { min: 40, max: 49, title: 'อายุ 40 - 49 ปี' },
+      { min: 59, max: 59, title: 'อายุ 50 - 59 ปี' },
+      { min: 60, max: 99, title: 'อายุ 60 ปีขึ้นไป' },
     ],
     type: '',
     distance: '',
@@ -140,7 +151,7 @@ class RunnerClass extends Component {
   }
 
   renderRunnerType() {
-    return this.state.runnerType.map(type => (
+    return this.state.runnerType.filter(type => type.age.min <= this.props.age && type.age.max >= this.props.age ).map(type => (
       <Tooltip key={type.name} title={`ค่าสมัคร ${type.fee} บาท`}><RadioButton value={type.name}><strong>{type.name}</strong> ({type.fee} บาท)</RadioButton></Tooltip>
     ))
   }
@@ -152,10 +163,15 @@ class RunnerClass extends Component {
       console.log('เยาวชน')
     }
 
-    console.log(this.props)
+    // console.log(this.props.age)
     return distanceByRunnerType[0].distance.map(distance => (
       <Tooltip key={distance} title="ระยะทาง {distance}"><RadioButton value={distance}>{distance} กิโลเมตร</RadioButton></Tooltip>
     ))
+  }
+
+  renderRunnerGen() {
+    const runnerGeneration = this.state.runnerGen.filter(gen => gen.min <= this.props.age && gen.max >= this.props.age)
+    return `จัดอยู่ในรุ่น${runnerGeneration[0].title}`
   }
 
 
@@ -189,7 +205,7 @@ class RunnerClass extends Component {
                 </RadioGroup>)}
             </FormItem> : null
           }
-
+          <strong className="ant-form-item-required">({this.renderRunnerGen()})</strong>
         </Col>
       </Row>
     )
