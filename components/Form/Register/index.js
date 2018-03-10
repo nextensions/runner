@@ -44,7 +44,7 @@ class RegisterForm extends Component {
     if (current === 1) {
       const { info } = this.props.state.data
       if (typeof info !== 'undefined') {
-        if (info.firstname && info.lastname) {
+        if (info.firstname && info.lastname && info.dob && info.age && info.gender && info.email && info.mobile && info.emer_person && info.emer_contact) {
           this.setState({ current })
           return
         }
@@ -52,6 +52,7 @@ class RegisterForm extends Component {
       message.warning('กรุณากรอกข้อมูลให้ครบถ้วน')
     }
   }
+
   prev() {
     const current = this.state.current - 1
     this.setState({ current })

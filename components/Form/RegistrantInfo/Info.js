@@ -326,10 +326,10 @@ class Info extends Component {
             <Col {...colTwiceLayout} style={{ marginBottom: '16px' }}>
               <FormItem {...formItemLayout}>
                 <Col {...colTwiceTailLayout} style={{ marginBottom: '16px' }}>
-                  <FormItem label="อายุ">
+                  <FormItem label="อายุ" help="(คำนวนให้จากปีเกิด)">
                     {getFieldDecorator('age', {
                       rules: [{ required: true, message: 'กรุณาระบุวันเดือนปีเกิดเพื่อคำนวนอายุ' }],
-                      initialValue: this.state.age,
+                      initialValue: this.state.age || this.props.age,
                       // validate: [{
                       //   // trigger: ['onBlur'],
                       //   rules: [{
@@ -337,7 +337,7 @@ class Info extends Component {
                       //     message: 'กรุณาระบุวันเดือนปีเกิดเพื่อคำนวนอายุ',
                       //   }],
                       // }],
-                    })(<InputNumber min={5} max={100} readOnly />)}
+                    })(<InputNumber min={5} max={100} readOnly disabled />)}
                   </FormItem>
                 </Col>
                 <Col span={1}>
@@ -447,20 +447,17 @@ class Info extends Component {
               </span>
             </Col>
             <Col {...colTwiceLayout}>
-              <FormItem {...formItemLayout} label="เบอร์มือถือติดต่อกรณีฉุกเฉิน">
+              <FormItem {...formItemLayout} label="เบอร์มือถือของผู้ติดต่อกรณีฉุกเฉิน">
                 {getFieldDecorator('emer_contact', {
                   rules: [{ required: true, type: 'string',
                   pattern: /^\(?(\d{2,3})\)?[-. ]?(\d{3,4})[-. ]?([0-9]{4})$/,
-                  len: 10, message: 'เบอร์มือถือสำหรับติดต่อกรณีฉุกเฉิน' }],
+                  len: 10, message: 'กรุณาระบุเบอร์มือถือของผู้ติดต่อกรณีฉุกเฉิน' }],
                   onChange: this.inputChangeFunc,
                   initialValue: props.emer_contact.value,
-                })(<Input title="info" placeholder="เบอร์มือถือสำหรับติดต่อกรณีฉุกเฉิน" maxLength="10" />)}
+                })(<Input title="info" placeholder="เบอร์มือถือของผู้ติดต่อกรณีฉุกเฉิน" maxLength="10" />)}
               </FormItem>
             </Col>
           </FormItem>
-          <Button type="primary" size="large" onClick={() => this.handleChangeStep()}>
-            ต่อไป<Icon type="right" />
-          </Button>
         </Col>
       </Row>
     )
