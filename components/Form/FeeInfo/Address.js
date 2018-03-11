@@ -180,7 +180,7 @@ class Address extends Component {
     return (
       <Row gutter={16}>
         <Col {...colLayout}>
-          <Divider>ที่อยู่สำหรับจัดส่งเสื้อ และเบอร์ BIB</Divider>
+          <Divider>ระบุที่อยู่สำหรับจัดส่งเสื้อ และเบอร์ BIB</Divider>
           <FormItem {...formItemLayout} label="บ้านเลขที่ หมู่บ้าน คอนโด">
             {getFieldDecorator('address', {
               rules: [{ required: true, message: 'กรุณาระบุ บ้านเลขที่ หมู่บ้าน คอนโด' }],

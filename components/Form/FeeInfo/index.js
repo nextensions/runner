@@ -3,7 +3,6 @@ import { Form, Row, Col, Card } from 'antd'
 
 import Shipping from './Shipping'
 import Cost from './Cost'
-import Address from './Address'
 // import Address from './Address'
 
 const cardLayout = {
@@ -56,7 +55,6 @@ class EducationInfo extends Component {
           <Col {...cardLayout}>
             <Card title={cardTitle('3.1', 'วิธีจัดส่งเสื้อ และเบอร์ BIB')} bordered={false}>
               <Shipping {...fields} onChange={this.handleFormChange} />
-              <Address {...fields} onChange={this.handleFormChange} />
             </Card>
           </Col>
           <Col {...cardLayout}>
