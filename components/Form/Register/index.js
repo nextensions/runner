@@ -58,6 +58,25 @@ class RegisterForm extends Component {
         }
       }
       message.warning('กรุณาระบุประเภท ระยะทาง และขนาดเสื้อ')
+    } else if (current === 3) {
+      if (typeof info !== 'undefined') {
+        if (info.shipmethod) {
+          if (info.shipmethod === 'post') {
+            const { address } = data
+            if (typeof address !== 'undefined') {
+              this.setState({ current })
+              return
+            } else {
+              message.warning('กรุณาระบุที่อยู่สำหรับจัดส่งเสื้อ และเบอร์ BIB')
+              return
+            }
+          } else {
+            this.setState({ current })
+            return
+          }
+        }
+      }
+      message.warning('กรุณาระบุวิธีจัดส่งเสื้อ และเบอร์ BIB')
     }
   }
 
