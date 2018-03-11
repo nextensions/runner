@@ -152,7 +152,10 @@ class Info extends Component {
   }
 
   calcAge = () => {
-    const { date, month, year } = this.state
+    // const { date, month, year } = this.state
+    const date = this.props.date.value
+    const month = this.props.month.value
+    const year = this.props.year.value
     if (date && month && year) {
       const age = moment().diff(`${year}-${month}-${date}`, 'years')
       this.setState({ ...this.state, age }, () => {
@@ -186,11 +189,9 @@ class Info extends Component {
     const { props } = this
     const { state } = this
 
-
     const dateOptions = [...Array(31).keys()].map(date => <Option key={date+1} value={String(date+1).padStart(2, "0")}>{date+1}</Option>)
     const monthOptions = moment.months().map((month, index) => <Option key={month} value={String(index+1).padStart(2, "0")}>{month}</Option>)
-    const yearOptions = [...Array(95).keys()].map(date => <Option key={date+1918} value={date+1918}>{date+1918+543}</Option>)
-
+    const yearOptions = [...Array(95).keys()].map(date => <Option key={2018-(date+5)} value={2018-(date+5)}>{2018-(date+5)+543}</Option>)
 
     return (
       <Row gutter={16}>

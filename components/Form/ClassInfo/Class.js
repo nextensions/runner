@@ -165,7 +165,7 @@ class RunnerClass extends Component {
 
     // console.log(this.props.age)
     return distanceByRunnerType[0].distance.map(distance => (
-      <Tooltip key={distance} title="ระยะทาง {distance}"><RadioButton value={distance}>{distance} กิโลเมตร</RadioButton></Tooltip>
+      <Tooltip key={distance} title={`ระยะทาง ${distance} กิโลเมตร`}><RadioButton value={distance}>{distance} กิโลเมตร</RadioButton></Tooltip>
     ))
   }
 
