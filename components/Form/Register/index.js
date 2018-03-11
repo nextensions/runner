@@ -1,28 +1,36 @@
 import React, { Component } from 'react'
 import { Steps, Button, message, Icon, Row, Col } from 'antd'
+import { connect } from 'react-redux'
 
 const { Step } = Steps
 
 const steps = [
   {
-    title: 'นักเรียน',
-    content: 'ข้อมูลส่วนตัว, ที่อยู่',
+    title: 'นักวิ่ง',
+    content: 'ข้อมูลส่วนตัว, ผู้ติดต่อ',
   },
   {
-    title: 'การศึกษา',
-    content: 'โรงเรียนเดิม, แผนการเรียนที่สมัคร',
+    title: 'ประเภท, ระยะทาง',
+    content: 'และขนาดเสื้อ',
   },
   {
-    title: 'ผู้ปกครอง',
-    content: 'บิดา-มารดา, ผู้ปกครอง',
+    title: 'สรุปค่าใช้จ่าย',
+    content: 'และวิธีการการจัดส่ง',
   },
   {
-    title: 'แผนที่และการเดินทาง',
-    content: 'จากบ้านมายังโรงเรียน',
+    title: 'ยืนยันการสมัคร',
+    content: 'และแจ้งชำระเงิน',
   },
 ]
 
-export default class RegisterForm extends Component {
+class RegisterForm extends Component {
+  static async getInitialProps({
+    store, isServer, pathname, query,
+  }) {
+    const data = await store.getState().data
+    return { data }
+  }
+
   constructor(props) {
     super(props)
     this.state = {
@@ -31,8 +39,28 @@ export default class RegisterForm extends Component {
   }
   next() {
     const current = this.state.current + 1
-    this.setState({ current })
+    const { data } = this.props.state
+    const { info } = data
+
+    if (current === 1) {
+      if (typeof info !== 'undefined') {
+        if (info.firstname && info.lastname && info.dob && info.age && info.gender && info.email && info.mobile && info.emer_person && info.emer_contact) {
+          this.setState({ current })
+          return
+        }
+      }
+      message.warning('กรุณากรอกข้อมูลให้ครบถ้วน')
+    } else if (current === 2) {
+      if (typeof info !== 'undefined') {
+        if (info.type && info.distance && info.size) {
+          this.setState({ current })
+          return
+        }
+      }
+      message.warning('กรุณาระบุประเภท ระยะทาง และขนาดเสื้อ')
+    }
   }
+
   prev() {
     const current = this.state.current - 1
     this.setState({ current })
@@ -40,6 +68,9 @@ export default class RegisterForm extends Component {
   goto(index) {
     const current = index
     this.setState({ current })
+  }
+  changeStep() {
+    console.log('aaa')
   }
   render() {
     const { current } = this.state
@@ -77,7 +108,7 @@ export default class RegisterForm extends Component {
                   onClick={() => message.success('Processing complete!')}
                 >
                   <Icon type="save" />
-                  บันทึก
+                  ยืนยันการสมัครและชำระค่าบริการ
                 </Button>
               )}
             </Col>
@@ -87,3 +118,9 @@ export default class RegisterForm extends Component {
     )
   }
 }
+
+const mapStateToProps = state => ({
+  state,
+})
+
+export default connect(mapStateToProps)(RegisterForm)

@@ -6,7 +6,7 @@ import { initStore } from '../store'
 import Wrapper from '../index'
 
 import DisplayForm from '../components/DisplayForm'
-import StudentProfile from '../components/StudentProfile'
+import Runner from '../components/Runner'
 
 const { Header, Content, Footer } = Layout
 
@@ -31,8 +31,9 @@ class Admission extends Component {
               style={{ lineHeight: '64px' }}
             >
               <Menu.Item key="1">แบบฟอร์มรับสมัคร</Menu.Item>
-              <Menu.Item key="2">พิมพ์ใบสมัคร</Menu.Item>
+              <Menu.Item key="2">E-Ticket (สำหรับรับเสื้อหน้างาน)</Menu.Item>
               <Menu.Item key="3">ขั้นตอนการสมัคร</Menu.Item>
+              <Menu.Item key="4">รายละเอียดโครงการ</Menu.Item>
             </Menu>
           </Header>
           <Content style={{ padding: '0 50px' }}>
@@ -42,7 +43,7 @@ class Admission extends Component {
               <Breadcrumb.Item>App</Breadcrumb.Item>
             </Breadcrumb>
             <div style={{ background: '#fff', padding: 24, minHeight: 280 }}>
-              <StudentProfile data={this.props.data} />
+              <Runner data={this.props.data} />
             </div>
             <DisplayForm />
           </Content>

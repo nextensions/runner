@@ -23,34 +23,34 @@ import FormIndex from '../components/Form/'
 import RegisterForm from '../components/Form/Register'
 import RegistrantInfo from '../components/Form/RegistrantInfo/'
 import Education from '../components/Form/EducationInfo'
+import Class from '../components/Form/ClassInfo'
+import Fee from '../components/Form/FeeInfo'
+import Payment from '../components/Form/Payment'
 
 class StudentProfile extends Component {
   render() {
     const stepContent = [
       {
-        title: 'นักเรียน',
-        content: <RegistrantInfo data={this.props.data} />,
+        title: 'นักวิ่ง',
+        content: <RegistrantInfo data={this.props.data} changeStep={() => console.log('ooo')} />,
       },
       {
-        title: 'การศึกษา',
-        content: <Education data={this.props.data} />,
+        title: 'ประเภท',
+        content: <Class data={this.props.data} />,
       },
       {
-        title: 'ผู้ปกครอง',
-        content: 'form Parent',
+        title: 'เสื้อ',
+        content: <Fee data={this.props.data} />,
       },
       {
-        title: 'แผนที่และการเดินทาง',
-        content: 'form Map',
+        title: 'ชำระเงิน',
+        content: <Payment data={this.props.data} />,
       },
     ]
 
     return (
       <div>
         <RegisterForm stepContent={stepContent} />
-        {/* <Profile />
-        <Profile />
-        <Address /> */}
       </div>
     )
   }

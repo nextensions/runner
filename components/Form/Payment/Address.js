@@ -5,6 +5,7 @@ import { bindActionCreators } from 'redux'
 
 import { inputChange } from '../../../actions'
 import Typeahead from '../../Typeahead/'
+import { fieldsEnum, resolveResultbyField } from '../../Typeahead/finderAddress'
 
 const FormItem = Form.Item
 
@@ -104,10 +105,10 @@ class Address extends Component {
       inputChange('presentAddress', 'presentSoi', this.props.soi.value)
       inputChange('presentAddress', 'presentStreet', this.props.street.value)
 
-      inputChange('presentAddress', 'presentSubDistrict', this.state.subDistrict)
-      inputChange('presentAddress', 'presentDistrict', this.state.district)
-      inputChange('presentAddress', 'presentProvince', this.state.province)
-      inputChange('presentAddress', 'presentZipcode', this.state.zipcode)
+      // inputChange('presentAddress', 'presentSubDistrict', this.state.subDistrict)
+      // inputChange('presentAddress', 'presentDistrict', this.state.district)
+      // inputChange('presentAddress', 'presentProvince', this.state.province)
+      // inputChange('presentAddress', 'presentZipcode', this.state.zipcode)
     }
   }
   handleChangeAddress = (address) => {
@@ -167,19 +168,19 @@ class Address extends Component {
       z: props.zipcode.value,
     }
 
-    const defaultPresentAddress = {
-      a: props.presentSubDistrict.value,
-      d: props.presentDistrict.value,
-      p: props.presentProvince.value,
-      z: props.presentZipcode.value,
-    }
+    // const defaultAddress = {
+    //   a: '',
+    //   d: '',
+    //   p: '',
+    //   z: '',
+    // }
 
     const cloneAddressLabel = cloneAddress ? 'ใช้ที่อยู่เดียวกับที่อยู่ตามบัตรประชาชน' : 'ใช้ที่อยู่เดียวกับที่อยู่ตามบัตรประชาชน'
 
     return (
       <Row gutter={16}>
         <Col {...colLayout}>
-          <Divider>ที่อยู่ตามบัตรประชาชน</Divider>
+          <Divider>ที่อยู่สำหรับจัดส่งเสื้อ และเบอร์ BIB</Divider>
           <FormItem {...formItemLayout} label="บ้านเลขที่ หมู่บ้าน คอนโด">
             {getFieldDecorator('address', {
               rules: [{ required: true, message: 'กรุณาระบุ บ้านเลขที่ หมู่บ้าน คอนโด' }],
@@ -230,9 +231,11 @@ class Address extends Component {
               </FormItem>
             </Col>
           </FormItem>
-          { /*
+
           <Typeahead
             kind="address"
+            fieldsEnum={fieldsEnum}
+            resolveResultbyField={resolveResultbyField}
             renderResult={(data) => {
               const provinceLabel = data.p === 'กรุงเทพมหานคร' ? '' : 'จังหวัด'
               const districtLabel = data.p === 'กรุงเทพมหานคร' ? 'เขต' : 'อำเภอ'
@@ -250,98 +253,8 @@ class Address extends Component {
             onAddressSelected={addressObject => this.handleChangeAddress(addressObject)}
             defaultAddress={defaultAddress}
           />
-          */}
 
-          <Divider style={{ marginTop: 0 }}>ที่อยู่ปัจจุบัน</Divider>
-          <Row>
-            <Col span={24} style={{ textAlign: 'right', marginBottom: '24px' }}>
-              {cloneAddressLabel} <Switch defaultChecked={cloneAddress} onChange={this.toggleCloneAddress} />
-            </Col>
-          </Row>
-          {
-            !cloneAddress ? (
-              <div>
-                <FormItem {...formItemLayout} label="บ้านเลขที่ หมู่บ้าน คอนโด">
-                  {getFieldDecorator('presentAddress', {
-                    rules: [{ required: !cloneAddress, message: 'กรุณาระบุ ' }],
-                    onChange: this.inputChange,
-                    // props: { defaultValue: props.presentAddress.value },
-                    initialValue: props.presentAddress.value,
-                  })(<Input title="presentAddress" placeholder="บ้านเลขที่ หมู่บ้าน คอนโด" />)}
-                </FormItem>
-                <FormItem {...formItemLayout}>
-                  <Col {...colTrippleLayout} style={{ marginBottom: '16px' }}>
-                    <FormItem {...formItemLayout} label="หมู่">
-                      {getFieldDecorator('presentMoo', {
-                        rules: [{ required: !cloneAddress, message: 'กรุณาระบุ ' }],
-                        onChange: this.inputChange,
-                        // props: { defaultValue: props.presentMoo.value },
-                        initialValue: props.presentMoo.value,
-                      })(<Input title="presentAddress" placeholder="หมู่" />)}
-                    </FormItem>
-                  </Col>
-                  <Col span={1}>
-                    <span style={{ display: 'inline-block', width: '100%', textAlign: 'center' }}>
-                        &nbsp;
-                    </span>
-                  </Col>
-                  <Col {...colTrippleLayout}>
-                    <FormItem {...formItemLayout} label="ซอย">
-                      {getFieldDecorator('presentSoi', {
-                        rules: [{ required: !cloneAddress, message: 'กรุณาระบุ ' }],
-                        onChange: this.inputChange,
-                        // props: { defaultValue: props.presentSoi.value },
-                        initialValue: props.presentSoi.value,
-                      })(<Input title="presentAddress" placeholder="ซอย" />)}
-                    </FormItem>
-                  </Col>
-                  <Col span={1}>
-                    <span style={{ display: 'inline-block', width: '100%', textAlign: 'center' }}>
-                        &nbsp;
-                    </span>
-                  </Col>
-                  <Col {...colTrippleTailLayout}>
-                    <FormItem {...formItemLayout} label="ถนน">
-                      {getFieldDecorator('presentStreet', {
-                        rules: [{ required: !cloneAddress, message: 'กรุณาระบุ ' }],
-                        onChange: this.inputChange,
-                        // props: { defaultValue: props.presentStreet.value },
-                        initialValue: props.presentStreet.value,
-                      })(<Input title="presentAddress" placeholder="ถนนe" />)}
-                    </FormItem>
-                  </Col>
-                </FormItem>
-                { /*
-                  <Typeahead
-                  kind="address"
-                  renderResult={(data) => {
-                    const provinceLabel = data.p === 'กรุงเทพมหานคร' ? '' : 'จังหวัด'
-                    const districtLabel = data.p === 'กรุงเทพมหานคร' ? 'เขต' : 'อำเภอ'
-                    const subDistrictLabel = data.p === 'กรุงเทพมหานคร' ? 'แขวง' : 'ตำบล'
-                    return (
-                      <div>
-                        {subDistrictLabel}
-                        <b>{data.d}</b> {districtLabel}
-                        <b>{data.a}</b> {provinceLabel}
-                        <b>{data.p}</b> รหัสไปรษณีย์
-                        <b>{data.z}</b>
-                      </div>
-                    )
-                  }}
-                  onAddressSelected={addressObject => this.handleChangePresentAddress(addressObject)}
-                  defaultAddress={defaultPresentAddress}
-                />
-                */}
-              </div>
-            ) : (
-              <Row>
-                <Col span={24} style={{ textAlign: 'center', marginBottom: '3px' }}>
-                  <Button type="dashed" disabled>ไม่ต้องกรอกที่อยู่ปัจจุบัน เนื่องจากใช้ที่อยู่เดียวกับที่อยู่ตามบัตรประชาชน</Button>
 
-                </Col>
-              </Row>
-            )
-          }
         </Col>
       </Row>
     )
