@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Form, Input, Row, Col, Radio, Divider, Tooltip, Upload, Icon, message } from 'antd'
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
 
 import { runnerType, shirtSize } from '../../../config/'
 
@@ -66,8 +65,15 @@ class Payment extends Component {
       fields: { ...this.state.fields, ...changedFields },
     })
   }
-  callback = (key) => {
-    console.log(key)
+  inputChange = (e) => {
+    const { inputChange } = this.props
+    const { id, title, value } = e.target
+    inputChange(title, id, value)
+  }
+
+  changeCheckButton = (e, name) => {
+    const { inputChange } = this.props
+    inputChange('info', name, e.target.value)
   }
 
   render() {
@@ -97,9 +103,7 @@ class Payment extends Component {
               <Icon type="inbox" />
             </p>
             <p className="ant-upload-text">คลิกหรือลากไฟล์มายังพื้นที่นี้เพื่ออัปโหลด</p>
-            <p className="ant-upload-hint">
-              ไฟล์รูปภาพหลักฐานการโอนเงินขนาดไม่เกิน 5MB.
-            </p>
+            <p className="ant-upload-hint">ไฟล์รูปภาพหลักฐานการโอนเงินขนาดไม่เกิน 5MB.</p>
           </Dragger>
         </Col>
       </Row>
