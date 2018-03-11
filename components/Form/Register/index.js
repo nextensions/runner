@@ -88,9 +88,6 @@ class RegisterForm extends Component {
     const current = index
     this.setState({ current })
   }
-  changeStep() {
-    console.log('aaa')
-  }
   render() {
     const { current } = this.state
     const { stepContent } = this.props

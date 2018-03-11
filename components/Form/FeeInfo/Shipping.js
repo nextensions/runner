@@ -96,14 +96,17 @@ const radioStyle = {
 
 
 class Shipping extends Component {
-
   constructor(props) {
     super(props)
-    this.inputChangeFunc = this.inputChangeFunc.bind(this)
+    this.inputChange = this.inputChange.bind(this)
   }
 
   state = {
     shipmethod: '',
+    address: '',
+    moo: '',
+    soi: '',
+    street: '',
   }
 
   handleSubmit = (e) => {
@@ -121,8 +124,8 @@ class Shipping extends Component {
 
   handleChangeAddress = (address) => {
     const {
-      a: subDistrict,
-      d: district,
+      a: district,
+      d: subDistrict,
       p: province,
       z: zipcode,
     } = address
@@ -141,7 +144,7 @@ class Shipping extends Component {
     })
   }
 
-  inputChangeFunc = (e) => {
+  inputChange = (e) => {
     const { inputChange } = this.props
     const { id, title, value } = e.target
     inputChange(title, id, value)
@@ -166,8 +169,8 @@ class Shipping extends Component {
     const { props, state } = this
 
     const defaultAddress = {
-      a: props.subDistrict.value,
-      d: props.district.value,
+      a: props.district.value,
+      d: props.subDistrict.value,
       p: props.province.value,
       z: props.zipcode.value,
     }
@@ -200,7 +203,7 @@ class Shipping extends Component {
               </RadioGroup>)}
           </FormItem>
         </Col>
-        { this.props.shipmethod.value === 'post' ?
+        { props.shipmethod.value === 'post'?
           <Col {...colLayout}>
             <Divider>ระบุที่อยู่สำหรับจัดส่งเสื้อ และเบอร์ BIB</Divider>
             <FormItem {...formItemLayout} label="บ้านเลขที่ หมู่บ้าน คอนโด">
@@ -275,8 +278,6 @@ class Shipping extends Component {
               onAddressSelected={addressObject => this.handleChangeAddress(addressObject)}
               defaultAddress={defaultAddress}
             />
-
-
           </Col> : null
         }
       </Row>

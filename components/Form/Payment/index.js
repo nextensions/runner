@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Form, Row, Col, Card } from 'antd'
 
 import Payment from './Payment'
-
+import Summary from './Summary'
 // import Address from './Address'
 
 const cardLayout = {
@@ -53,12 +53,17 @@ class PaymentInfo extends Component {
       <Form layout="vertical" onSubmit={this.handleSubmit}>
         <Row gutter={16}>
           <Col {...cardLayout}>
-            <Card title={cardTitle('4.1', 'โอนเงินและแนบหลักฐานการชำระเงิน')} bordered={false}>
-              <Payment {...fields} onChange={this.handleFormChange} />
+            <Card title={cardTitle('4.1', 'ยืนยันข้อมูลผู้สมัคร')} bordered={false}>
+              <Summary {...fields} onChange={this.handleFormChange} />
             </Card>
           </Col>
           <Col {...cardLayout}>
-            <Card title={cardTitle('4.2', 'คำรับรองของผู้สมัคร')} bordered={false}>
+            <Card title={cardTitle('4.2', 'โอนเงินและแนบหลักฐานการชำระเงิน')} bordered={false}>
+              <Payment {...fields} onChange={this.handleFormChange} />
+            </Card>
+          </Col>
+          <Col {...cardLayout} style={{ marginTop: '20px' }}>
+            <Card title={cardTitle('4.3', 'คำรับรองของผู้สมัคร')} bordered={false}>
               <p>
                 ข้าพเจ้าขอรับรองว่าข้อความข้างต้นเป็นความจริง และได้ทำการฝึกซ้อม
                 ทั้งมีสุขภาพสมบูรณ์พร้อมที่จะมีการแข่งขันในประเภทที่สมัครข้างต้นด้วยความเต็มใจ

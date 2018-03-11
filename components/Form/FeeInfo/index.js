@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Form, Row, Col, Card } from 'antd'
+import { connect } from 'react-redux'
 
 import Shipping from './Shipping'
 import Cost from './Cost'
@@ -41,6 +42,35 @@ class FeeInfo extends Component {
       zipcode: { value: '' },
     },
   }
+  constructor(props) {
+    super(props)
+  }
+
+  componentWillMount() {
+    const { data } = this.props
+    this.getData(data)
+  }
+  getData = async (data) => {
+    if (Object.keys(data).length !== 0 && data.constructor === Object) {
+      if (data.hasOwnProperty('address')) {
+        const { address, info } = data
+        await this.setState({
+          fields: {
+            ...this.state.fields,
+            shipmethod: { value: info.shipmethod || this.state.fields.shipmethod.value },
+            address: { value: address.address || this.state.fields.address.value },
+            moo: { value: address.moo || this.state.fields.moo.value },
+            soi: { value: address.soi || this.state.fields.soi.value },
+            street: { value: address.street || this.state.fields.street.value },
+            subDistrict: { value: address.subDistrict || this.state.fields.subDistrict.value },
+            district: { value: address.district || this.state.fields.district.value },
+            province: { value: address.province || this.state.fields.province.value },
+            zipcode: { value: address.zipcode || this.state.fields.zipcode.value },
+          },
+        })
+      }
+    }
+  }
   handleFormChange = (changedFields) => {
     this.setState({
       fields: { ...this.state.fields, ...changedFields },
@@ -48,7 +78,7 @@ class FeeInfo extends Component {
   }
   render() {
     const { fields } = this.state
-    // console.log(store.getState().data)
+
     return (
       <Form layout="vertical" onSubmit={this.handleSubmit}>
         <Row gutter={16}>
@@ -68,4 +98,8 @@ class FeeInfo extends Component {
   }
 }
 
-export default FeeInfo
+const mapStateToProps = state => ({
+  state,
+})
+
+export default connect(mapStateToProps)(FeeInfo)

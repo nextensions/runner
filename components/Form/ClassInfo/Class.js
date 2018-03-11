@@ -159,11 +159,6 @@ class RunnerClass extends Component {
   renderRunnerDistance() {
     const distanceByRunnerType = this.state.runnerType.filter(type => type.name === this.props.type.value)
 
-    if (distanceByRunnerType[0].name === 'เยาวชน') {
-      console.log('เยาวชน')
-    }
-
-    // console.log(this.props.age)
     return distanceByRunnerType[0].distance.map(distance => (
       <Tooltip key={distance} title={`ระยะทาง ${distance} กิโลเมตร`}><RadioButton value={distance}>{distance} กิโลเมตร</RadioButton></Tooltip>
     ))

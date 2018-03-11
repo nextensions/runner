@@ -22,7 +22,7 @@ const colLayout = {
   xl: { span: 24 },
 }
 
-class Cost extends Component {
+class Summary extends Component {
   static async getInitialProps({
     store, isServer, pathname, query,
   }) {
@@ -69,49 +69,52 @@ class Cost extends Component {
   render() {
     const { data } = this.props.state
     const runningFee = runnerType.filter(type => type.name === data.info.type)[0]
-
     const runningShirtInfo = shirtSize.filter(shirt => shirt.size === data.info.size)[0]
-
     const shippingFee = 65
+
+    const gender = [
+      { en: 'male', th: 'ชาย' },
+      { en: 'female', th: 'หญิง' },
+    ]
 
     return (
       <Row type="flex" justify="end">
         <Col {...colLayout}>
           <Collapse defaultActiveKey={['1', '2', '3']} onChange={this.callback}>
-            <Panel header="ค่าสมัครวิ่ง" key="1">
+            <Panel header="ข้อมูลส่วนตัว" key="1">
               <Row type="flex" justify="end">
-                <Col span={12}>
-                  ประเภท <strong style={{ textDecoration: 'underline' }}>{data.info.type}</strong>{' '}
-                  ระยะทาง{' '}
-                  <strong style={{ textDecoration: 'underline' }}>
-                    {data.info.distance} กิโลเมตร
-                  </strong>
-                </Col>
-                <Col span={12} align="right">
-                  <strong>
-                    {runningFee.fee.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')} บาท
-                  </strong>
+                <Col span={24}>
+                  <strong>ชื่อ-นามสกุล: </strong>{`${data.info.firstname} ${data.info.firstname}`} <strong>เพศ: </strong>{gender.filter(sex => sex.en === data.info.gender)[0].th} <strong>อายุ: </strong>{`${data.info.age} ปี`}<br />
+                  <strong>อีเมล: </strong>{data.info.email} <strong>มือถือ: </strong> {data.info.mobile}<br />
+                  <strong>กรณีฉุกเฉินติดต่อ: </strong>{`${data.info.emer_person} (${data.info.emer_contact})`}<br />
                 </Col>
               </Row>
             </Panel>
-            <Panel header="ค่าจัดส่งเสื้อ และเบอร์ BIB" key="2">
+            <Panel header="ประเภท, ระยะทาง และขนาดเสื้อ" key="2">
               <Row type="flex" justify="end">
-                <Col span={12}>
-                  <strong style={{ textDecoration: 'underline' }}>
-                    ไซต์ {runningShirtInfo.size}
-                  </strong>{' '}
-                  (รอบอก {runningShirtInfo.chest} นิ้ว){' '}
-                  <strong style={{ textDecoration: 'underline' }}>1 ตัว</strong>
-                </Col>
-                <Col span={12} align="right">
-                  <strong>{shippingFee.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')} บาท</strong>
+                <Col span={24}>
+                  <strong>ประเภท: </strong>{data.info.type} <strong>ระยะทาง: </strong>{data.info.distance} กิโลเมตร<br />
+                  <strong>เสื้อไซต์: </strong> {runningShirtInfo.size} (1 ตัว)
                 </Col>
               </Row>
             </Panel>
-            <Panel header="รวมทั้งสิ้น" key="3">
+            <Panel header="วิธีจัดส่งเสื้อ และเบอร์ BIB" key="3">
               <Row type="flex" justify="end">
-                <Col span={12} align="right">
-                  <strong style={{ fontSize: 22 }}>{(runningFee.fee + shippingFee).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')} บาท</strong>
+                <Col span={24}>
+                  {
+                    data.info.shipmethod === 'post' ?
+                      <strong>
+                        ส่งไปรษณีย์<br />
+                        {data.address.address} {data.address.moo} {data.address.soi} {data.address.street}<br />
+                        {data.address.subDistrict} {data.address.district} {data.address.province} {data.address.zipcode}
+                      </strong> :
+                      <strong>
+                        มารับด้วยตนเอง<br />
+                        ณ โรงเรียนสิริรัตนาธร<br />
+                        วันศุกร์ที่ 1 มิถุนายน 2561 ตั้งแต่เวลา 12.00 – 19.00 น.<br />
+                        และวันเสาร์ที่ 2 มิถุนายน 2561 ตั้งแต่เวลา 04.00 – 05.00 น.
+                      </strong>
+                  }
                 </Col>
               </Row>
             </Panel>
@@ -126,4 +129,4 @@ const mapStateToProps = state => ({
   state,
 })
 
-export default connect(mapStateToProps)(Cost)
+export default connect(mapStateToProps)(Summary)
