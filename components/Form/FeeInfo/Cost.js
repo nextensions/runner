@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Form, Row, Col, Card, Collapse } from 'antd'
+import { Card, Form, Input, Row, Col, Radio, Divider, Tooltip, Modal, Collapse } from 'antd'
 import { connect } from 'react-redux'
 
 const Panel = Collapse.Panel
@@ -39,7 +39,7 @@ class Cost extends Component {
   }
   componentWillMount() {
     const { data } = this.props
-    this.getData(data)
+    // this.getData(data)
   }
   getData = async (data) => {
     if (Object.keys(data).length !== 0 && data.constructor === Object) {
@@ -61,14 +61,15 @@ class Cost extends Component {
       fields: { ...this.state.fields, ...changedFields },
     })
   }
-  render() {
-    const { fields } = this.state
-    const { info } = this.props.state.data
+  callback = (key) => {
+    console.log(key)
+  }
 
+  render() {
     return (
       <Row type="flex" justify="end">
         <Col {...colLayout}>
-          <Collapse defaultActiveKey={['1', '2', '3']} onChange={callback}>
+          <Collapse defaultActiveKey={['1', '2', '3']} onChange={this.callback}>
             <Panel header="ค่าสมัครวิ่ง" key="1">
               <Row type="flex" justify="end">
                 <Col span={12}>ประเภท VIP ระยะทาง 10 กิโลเมตร</Col>
@@ -98,9 +99,6 @@ class Cost extends Component {
     )
   }
 }
-
-// export default RunnerTypeInfo
-
 
 const mapStateToProps = state => ({
   state,
