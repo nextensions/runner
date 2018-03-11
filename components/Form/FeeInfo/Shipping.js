@@ -185,7 +185,7 @@ class Shipping extends Component {
                 <Radio style={radioStyle} value="post">
                   <strong>ไปรษณีย์</strong><br />
                   <em style={{ marginLeft: '20px' }}>
-                    คนแรก 65 บาท คนที่ 2 เป็นต้นไปคนละ 35 บาท
+                    ค่าจัดส่ง 65 บาท
                   </em>
                 </Radio>
                 <Radio style={radioStyle} value="pickup">

@@ -25,7 +25,7 @@ const cardTitle = (step, title) => (
   </div>
 )
 
-class EducationInfo extends Component {
+class FeeInfo extends Component {
   state = {
     fields: {
       shipmethod: { value: '' },
@@ -68,4 +68,4 @@ class EducationInfo extends Component {
   }
 }
 
-export default EducationInfo
+export default FeeInfo

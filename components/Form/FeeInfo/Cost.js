@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import { Card, Form, Input, Row, Col, Radio, Divider, Tooltip, Modal, Collapse } from 'antd'
 import { connect } from 'react-redux'
 
+import { runnerType, shirtSize } from '../../../config/'
+
 const Panel = Collapse.Panel
 
 const cardLayout = {
@@ -66,30 +68,51 @@ class Cost extends Component {
   }
 
   render() {
+    const { data } = this.props.state
+    const runningFee = runnerType.filter(type => type.name === data.info.type)[0]
+
+    const runningShirtInfo = shirtSize.filter(shirt => shirt.size === data.info.size)[0]
+
+    const shippingFee = 65
+
     return (
       <Row type="flex" justify="end">
         <Col {...colLayout}>
           <Collapse defaultActiveKey={['1', '2', '3']} onChange={this.callback}>
             <Panel header="ค่าสมัครวิ่ง" key="1">
               <Row type="flex" justify="end">
-                <Col span={12}>ประเภท VIP ระยะทาง 10 กิโลเมตร</Col>
+                <Col span={12}>
+                  ประเภท <strong style={{ textDecoration: 'underline' }}>{data.info.type}</strong>{' '}
+                  ระยะทาง{' '}
+                  <strong style={{ textDecoration: 'underline' }}>
+                    {data.info.distance} กิโลเมตร
+                  </strong>
+                </Col>
                 <Col span={12} align="right">
-                  <strong>1,000 บาท</strong>
+                  <strong>
+                    {runningFee.fee.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')} บาท
+                  </strong>
                 </Col>
               </Row>
             </Panel>
             <Panel header="ค่าจัดส่งเสื้อ และเบอร์ BIB" key="2">
               <Row type="flex" justify="end">
-                <Col span={12}>ไซต์ L (รอบอก 40") 1 ตัว</Col>
+                <Col span={12}>
+                  <strong style={{ textDecoration: 'underline' }}>
+                    ไซต์ {runningShirtInfo.size}
+                  </strong>{' '}
+                  (รอบอก {runningShirtInfo.chest} นิ้ว){' '}
+                  <strong style={{ textDecoration: 'underline' }}>1 ตัว</strong>
+                </Col>
                 <Col span={12} align="right">
-                  <strong>65 บาท</strong>
+                  <strong>{shippingFee.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')} บาท</strong>
                 </Col>
               </Row>
             </Panel>
             <Panel header="รวมทั้งสิ้น" key="3">
               <Row type="flex" justify="end">
                 <Col span={12} align="right">
-                  <strong>1,065 บาท</strong>
+                  <strong style={{ fontSize: 22 }}>{(runningFee.fee + shippingFee).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')} บาท</strong>
                 </Col>
               </Row>
             </Panel>
