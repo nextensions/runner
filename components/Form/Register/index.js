@@ -52,7 +52,12 @@ class RegisterForm extends Component {
       message.warning('กรุณากรอกข้อมูลให้ครบถ้วน')
     } else if (current === 2) {
       if (typeof info !== 'undefined') {
-        if (info.type && info.distance && info.size) {
+        if (info.type && info.type !== 'นักเรียน') {
+          if (info.distance && info.size) {
+            this.setState({ current })
+            return
+          }
+        } else if (info.distance) {
           this.setState({ current })
           return
         }

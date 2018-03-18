@@ -79,11 +79,14 @@ class RunnerTypeInfo extends Component {
               <Class {...fields} onChange={this.handleFormChange} age={info.age} />
             </Card>
           </Col>
-          <Col {...cardLayout}>
-            <Card title={cardTitle('2.2', 'ขนาดเสื้อที่ต้องการ')} bordered={false}>
-              <Shirt {...fields} onChange={this.handleFormChange} />
-            </Card>
-          </Col>
+          {
+            info.type !== 'นักเรียน' ?
+              <Col {...cardLayout}>
+                <Card title={cardTitle('2.2', 'ขนาดเสื้อที่ต้องการ')} bordered={false}>
+                  <Shirt {...fields} onChange={this.handleFormChange} />
+                </Card>
+              </Col> : null
+          }
         </Row>
       </Form>
     )

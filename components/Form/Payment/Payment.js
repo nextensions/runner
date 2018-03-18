@@ -80,7 +80,8 @@ class Payment extends Component {
     const { data } = this.props.state
     const runningFee = runnerType.filter(type => type.name === data.info.type)[0]
     const runningShirtInfo = shirtSize.filter(shirt => shirt.size === data.info.size)[0]
-    const shippingFee = 65
+    const shippingFee = data.info.shipmethod !== 'pickup' ? 65 : 0
+
     const gender = [{ en: 'male', th: 'ชาย' }, { en: 'female', th: 'หญิง' }]
 
     return (

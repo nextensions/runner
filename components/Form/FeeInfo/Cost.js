@@ -70,9 +70,9 @@ class Cost extends Component {
     const { data } = this.props.state
     const runningFee = runnerType.filter(type => type.name === data.info.type)[0]
 
-    const runningShirtInfo = shirtSize.filter(shirt => shirt.size === data.info.size)[0]
+    const runningShirtInfo = data.info.type === 'นักเรียน' ? shirtSize.filter(shirt => shirt.size === data.info.size)[0] : ''
 
-    const shippingFee = 65
+    const shippingFee = data.info.shipmethod !== 'pickup' ? 65 : 0
 
     return (
       <Row type="flex" justify="end">
@@ -94,20 +94,23 @@ class Cost extends Component {
                 </Col>
               </Row>
             </Panel>
-            <Panel header="ค่าจัดส่งเสื้อ และเบอร์ BIB" key="2">
-              <Row type="flex" justify="end">
-                <Col span={12}>
-                  <strong style={{ textDecoration: 'underline' }}>
-                    ไซต์ {runningShirtInfo.size}
-                  </strong>{' '}
-                  (รอบอก {runningShirtInfo.chest} นิ้ว){' '}
-                  <strong style={{ textDecoration: 'underline' }}>1 ตัว</strong>
-                </Col>
-                <Col span={12} align="right">
-                  <strong>{shippingFee.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')} บาท</strong>
-                </Col>
-              </Row>
-            </Panel>
+            {
+              data.info.type !== 'นักเรียน' && data.info.shipmethod !== 'pickup' ?
+                <Panel header="ค่าจัดส่งเสื้อ และเบอร์ BIB" key="2">
+                  <Row type="flex" justify="end">
+                    <Col span={12}>
+                      <strong style={{ textDecoration: 'underline' }}>
+                        ไซต์ {runningShirtInfo.size}
+                      </strong>{' '}
+                      (รอบอก {runningShirtInfo.chest} นิ้ว){' '}
+                      <strong style={{ textDecoration: 'underline' }}>1 ตัว</strong>
+                    </Col>
+                    <Col span={12} align="right">
+                      <strong>{shippingFee.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')} บาท</strong>
+                    </Col>
+                  </Row>
+                </Panel> : null
+            }
             <Panel header="รวมทั้งสิ้น" key="3">
               <Row type="flex" justify="end">
                 <Col span={12} align="right">

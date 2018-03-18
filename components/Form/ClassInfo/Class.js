@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 import { Form, Input, Row, Col, Radio, Divider, Tooltip } from 'antd'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import moment from 'moment'
 
+import { runnerType, shirtSize } from '../../../config/'
 import { inputChange } from '../../../actions'
 
 require('moment/locale/th')
@@ -95,12 +95,7 @@ class RunnerClass extends Component {
   }
 
   state = {
-    runnerType: [
-      { name: 'เยาวชน', fee: 200, distance: [5], age: { min: 4, max: 18 } },
-      { name: 'บุคคลทั่วไป', fee: 400, distance: [3, 5, 10], age: { min: 19, max: 99 } },
-      { name: 'vip', fee: 1000, distance: [3, 5, 10], age: { min: 19, max: 99 } },
-      { name: 'แฟนซี', fee: 400, distance: [3, 5, 10], age: { min: 19, max: 99 } },
-    ],
+    runnerType,
     runnerGen: [
       { min: 4, max: 12, title: 'อายุไม่เกิน 12 ปี' },
       { min: 13, max: 14, title: 'อายุ 13 - 14 ปี' },

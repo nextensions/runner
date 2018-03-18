@@ -70,7 +70,9 @@ class Summary extends Component {
     const { data } = this.props.state
     const runningFee = runnerType.filter(type => type.name === data.info.type)[0]
     const runningShirtInfo = shirtSize.filter(shirt => shirt.size === data.info.size)[0]
-    const shippingFee = 65
+    const shippingFee = data.info.shipmethod !== 'pickup' ? 65 : 0
+    const districtLabel = data.address.province === 'กรุงเทพมหานคร' ? 'เขต' : 'อำเภอ'
+    const subDistrictLabel = data.address.province === 'กรุงเทพมหานคร' ? 'แขวง' : 'ตำบล'
 
     const gender = [
       { en: 'male', th: 'ชาย' },
@@ -105,8 +107,9 @@ class Summary extends Component {
                     data.info.shipmethod === 'post' ?
                       <strong>
                         ส่งไปรษณีย์<br />
-                        {data.address.address} {data.address.moo} {data.address.soi} {data.address.street}<br />
-                        {data.address.subDistrict} {data.address.district} {data.address.province} {data.address.zipcode}
+                        {data.info.firstname} {data.info.lastname} ({data.info.mobile})<br />
+                        {data.address.address} {data.address.moo ? `หมู่ ${data.address.moo}` : null} {data.address.soi ? `ซอย ${data.address.soi}` : null} {data.address.street ? `ถนน ${data.address.street}` : null}<br />
+                        {subDistrictLabel} {data.address.subDistrict} {districtLabel}   {data.address.district} {data.address.province} {data.address.zipcode}
                       </strong> :
                       <strong>
                         มารับด้วยตนเอง<br />

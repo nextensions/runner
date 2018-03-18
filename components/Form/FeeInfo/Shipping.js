@@ -96,6 +96,13 @@ const radioStyle = {
 
 
 class Shipping extends Component {
+  static async getInitialProps({
+    store, isServer, pathname, query,
+  }) {
+    const data = await store.getState().data
+    return { data }
+  }
+
   constructor(props) {
     super(props)
     this.inputChange = this.inputChange.bind(this)
@@ -107,6 +114,9 @@ class Shipping extends Component {
     moo: '',
     soi: '',
     street: '',
+  }
+  componentWillMount() {
+    const { data } = this.props
   }
 
   handleSubmit = (e) => {
@@ -167,6 +177,7 @@ class Shipping extends Component {
   render() {
     const { getFieldDecorator } = this.props.form
     const { props, state } = this
+    const { data } = this.props.state
 
     const defaultAddress = {
       a: props.district.value,
@@ -182,15 +193,18 @@ class Shipping extends Component {
             {getFieldDecorator('shipmethod', {
               rules: [{ required: true, message: 'กรุณาระบุวิธีจัดส่ง' }],
               onChange: e => this.changeCheckButton(e, 'shipmethod'),
-              initialValue: props.shipmethod.value,
+              initialValue: data.info.shipmethod,
             })(
               <RadioGroup style={{ float: 'left' }}>
-                <Radio style={radioStyle} value="post">
-                  <strong>ไปรษณีย์</strong><br />
-                  <em style={{ marginLeft: '20px' }}>
-                    ค่าจัดส่ง 65 บาท
-                  </em>
-                </Radio>
+                {
+                  data.info.type !== 'นักเรียน' ?
+                    <Radio style={radioStyle} value="post">
+                      <strong>ไปรษณีย์</strong><br />
+                      <em style={{ marginLeft: '20px' }}>
+                        ค่าจัดส่ง 65 บาท
+                      </em>
+                    </Radio> : null
+                }
                 <Radio style={radioStyle} value="pickup">
                   <strong>มารับด้วยตนเอง ณ โรงเรียนสิริรัตนาธร</strong><br />
                   <em style={{ marginLeft: '20px' }}>
@@ -203,7 +217,7 @@ class Shipping extends Component {
               </RadioGroup>)}
           </FormItem>
         </Col>
-        { props.shipmethod.value === 'post'?
+        { props.shipmethod.value === 'post' ?
           <Col {...colLayout}>
             <Divider>ระบุที่อยู่สำหรับจัดส่งเสื้อ และเบอร์ BIB</Divider>
             <FormItem {...formItemLayout} label="บ้านเลขที่ หมู่บ้าน คอนโด">
@@ -285,6 +299,10 @@ class Shipping extends Component {
   }
 }
 
+const mapStateToProps = state => ({
+  state,
+})
+
 const mapDispatchToProps = dispatch => ({
   inputChange: bindActionCreators(inputChange, dispatch),
 })
@@ -292,4 +310,5 @@ const mapDispatchToProps = dispatch => ({
 export default Form.create({
   onFieldsChange(props, changedFields) {
     props.onChange(changedFields)
-  }})(connect(null, mapDispatchToProps)(Shipping))
+  }})(connect(mapStateToProps, mapDispatchToProps)(Shipping))
+
