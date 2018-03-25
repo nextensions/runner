@@ -176,14 +176,15 @@ class Info extends Component {
         accumulator + (parseFloat(currentValue) * (13 - currentIndex)) : accumulator)
 
     const sum = Array.from(value).reduce(reducer, 0)
-
-    return (((11 - sum) % 11) % 10 !== parseFloat(value.charAt(12)))
+    return ((11 - (sum % 11)) % 10 === parseFloat(value.charAt(12)))
   }
 
   inputChangeCitizen = (e) => {
 
     const { inputChange } = this.props
     const { id, title, value } = e.target
+
+    // console.log(this.validateNationalID(value))
     inputChange(title, id, value)
   }
 
@@ -266,10 +267,11 @@ class Info extends Component {
                       required: true,
                       type: 'string',
                       len: 13,
-                      message: 'กรุณาระบุหมายเลขบัตรประชาชนสำหรับใช้อ้างอิงการสมัคร'
+                      message: 'กรุณาระบุหมายเลขบัตรประชาชนสำหรับใช้อ้างอิงการสมัคร',
                     },
                     {
-                      validator: this.validateNationalID,
+                      message: 'กรุณาระบุหมายเลขบัตรประชาชนที่ถูกต้อง',
+                      validator: (rule, value, callback) => this.validateNationalID(value) ? callback() : callback(true),
                     },
                   ],
                   onChange: this.inputChangeCitizen,
