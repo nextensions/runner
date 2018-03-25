@@ -142,7 +142,7 @@ class Term extends Component {
               onChange: e => this.changeCheckButton(e, 'agreement'),
               initialValue: props.agreement.value,
             })(
-              <Checkbox checked={props.agreement.value}>
+              <Checkbox checked={props.agreement.value || this.state.agreement}>
               ข้าพเจ้าขอรับรองว่าข้อความข้างต้นเป็นความจริง และได้ทำการฝึกซ้อม
               ทั้งมีสุขภาพสมบูรณ์พร้อมที่จะมีการแข่งขันในประเภทที่สมัครข้างต้นด้วยความเต็มใจ
               และจะปฏิบัติตามกติกาการแข่งขันทุกประการ
