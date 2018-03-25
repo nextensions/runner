@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Form, Input, Row, Col, Radio, Divider, Tooltip, Upload, Icon, message } from 'antd'
+import { Form, Input, Row, Col, Radio, Divider, Tooltip, Upload, Icon, message, Card, Avatar } from 'antd'
 import { connect } from 'react-redux'
 
 import { runnerType, shirtSize } from '../../../config/'
@@ -8,6 +8,7 @@ const FormItem = Form.Item
 const RadioButton = Radio.Button
 const RadioGroup = Radio.Group
 const Dragger = Upload.Dragger
+const { Meta } = Card
 
 const cardLayout = {
   xs: { span: 24 },
@@ -88,6 +89,16 @@ class Payment extends Component {
       <Row gutter={16}>
         <Col {...colLayout}>
           <Row type="flex" justify="end">
+            <Col span={4}>
+              <Avatar src="static/images/ktb.png" style={{ width: '64px', height: '64px' }} />
+            </Col>
+            <Col span={20}>
+              <strong style={{ fontSize: 22 }}>ธนาคารกรุงไทย</strong><br />
+              <strong style={{ fontSize: 18 }}>สาขา : อุดมสุข</strong><br />
+              <strong style={{ fontSize: 18 }}>ชื่อบัญชี : "เดิน - วิ่ง โดย โรงเรียน สิริรัตนาธร"</strong><br />
+              <strong style={{ fontSize: 18 }}>เลขที่บัญชี : 259-0-30516-8</strong>
+            </Col>
+            <Divider />
             <Col span={12}>
               <strong style={{ fontSize: 22 }}>ยอดที่ต้องชำระ</strong>
             </Col>

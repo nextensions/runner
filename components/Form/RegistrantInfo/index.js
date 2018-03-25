@@ -34,6 +34,7 @@ class RegistrantInfo extends Component {
     fields: {
       firstname: { value: '' },
       lastname: { value: '' },
+      citizen: { value: '' },
       email: { value: '' },
       mobile: { value: '' },
       gender: { value: '' },
@@ -63,6 +64,7 @@ class RegistrantInfo extends Component {
             ...this.state.fields,
             firstname: { value: info.firstname || this.state.fields.firstname.value },
             lastname: { value: info.lastname || this.state.fields.lastname.value },
+            citizen: { value: info.citizen || this.state.fields.citizen.value },
             email: { value: info.email || this.state.fields.email.value },
             mobile: { value: info.mobile || this.state.fields.mobile.value },
             gender: { value: info.gender || this.state.fields.gender.value },

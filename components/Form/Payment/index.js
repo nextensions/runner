@@ -6,6 +6,7 @@ import { bindActionCreators } from 'redux'
 import { inputChange } from '../../../actions'
 import Payment from './Payment'
 import Summary from './Summary'
+import Term from './Term'
 // import Address from './Address'
 
 const FormItem = Form.Item
@@ -49,6 +50,7 @@ class PaymentInfo extends Component {
       district: { value: '' },
       province: { value: '' },
       zipcode: { value: '' },
+      agreement: { value: '' },
     },
   }
   handleFormChange = (changedFields) => {
@@ -85,27 +87,7 @@ class PaymentInfo extends Component {
           </Col>
           <Col {...cardLayout} style={{ marginTop: '20px' }}>
             <Card title={cardTitle('4.3', 'คำรับรองของผู้สมัคร')} bordered={false}>
-              <FormItem >
-                {getFieldDecorator('agreement', {
-                  valuePropName: 'checked',
-                })(
-                  <Checkbox>
-                  ข้าพเจ้าขอรับรองว่าข้อความข้างต้นเป็นความจริง และได้ทำการฝึกซ้อม
-                  ทั้งมีสุขภาพสมบูรณ์พร้อมที่จะมีการแข่งขันในประเภทที่สมัครข้างต้นด้วยความเต็มใจ
-                  และจะปฏิบัติตามกติกาการแข่งขันทุกประการ
-                  และจะไม่เรียกร้องค่าเสียหายใดๆหากเกิดอันตรายหรือบาดเจ็บทั้งก่อนและหลังการแข่งขัน
-                  อีกทั้งยินดีที่จะแสดงหลักฐานพิสูจน์ตัวเองต่อคณะผู้จัดการแข่งขัน
-                  และข้าพเจ้ายินยอมให้คณะผู้จัดการแข่งขันถ่ายภาพหรือภาพยนต์เพื่อบันทึกการแข่งขัน
-                  และถือว่าการบันทึกภาพยนต์ดังกล่าวเป็นลิขสิทธิ์ของคณะกรรมการจัดการแข่งขันในครั้งนี้
-                  การยืนยันการสมัครผ่านระบบออนไลน์นี้
-                  ถือว่าท่านได้ให้การยอมรับข้อความข้างต้นแทนการเซ็นชื่อ
-                  </Checkbox>
-                )}
-              </FormItem>
-              <p>
-                * หลังจากยืนยันและชำระค่าสมัครแล้ว
-                ไม่สามารถยกเลิกหรือเปลี่ยนแปลงข้อมูลการสมัครใดๆในทุกกรณี*
-              </p>
+              <Term {...fields} onChange={this.handleFormChange} />
             </Card>
           </Col>
         </Row>
@@ -121,4 +103,5 @@ const mapDispatchToProps = dispatch => ({
 export default Form.create({
   onFieldsChange(props, changedFields) {
     props.onChange(changedFields)
-  }})(connect(null, mapDispatchToProps)(PaymentInfo))
+  },
+})(connect(null, mapDispatchToProps)(PaymentInfo))

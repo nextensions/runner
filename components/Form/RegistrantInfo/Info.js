@@ -165,6 +165,28 @@ class Info extends Component {
     }
   }
 
+  validateNationalID = (value) => {
+
+    if (value.length !== 13) {
+      return false
+    }
+
+    const reducer = (accumulator, currentValue, currentIndex) =>
+      (currentIndex < (value.length - 1) ?
+        accumulator + (parseFloat(currentValue) * (13 - currentIndex)) : accumulator)
+
+    const sum = Array.from(value).reduce(reducer, 0)
+
+    return (((11 - sum) % 11) % 10 !== parseFloat(value.charAt(12)))
+  }
+
+  inputChangeCitizen = (e) => {
+
+    const { inputChange } = this.props
+    const { id, title, value } = e.target
+    inputChange(title, id, value)
+  }
+
   handleChange = (value) => {
     console.log(`selected ${value}`)
   }
@@ -198,12 +220,37 @@ class Info extends Component {
         <Col {...colLayout}>
           <FormItem {...formItemLayout}>
             <Col {...colTwiceLayout} style={{ marginBottom: '16px' }}>
-              <FormItem {...formItemLayout} label="ชื่อ">
-                {getFieldDecorator('firstname', {
-                  rules: [{ required: true, message: 'กรุณาระบุชื่อ' }],
-                  onChange: this.inputChangeFunc,
-                  initialValue: props.firstname.value,
-                })(<Input title="info" placeholder="ชื่อ" maxLength="255" />)}
+              <FormItem {...formItemLayout}>
+                <Col {...colTwiceTailLayout} style={{ marginBottom: '16px' }}>
+                  <FormItem {...formItemLayout} label="ชื่อ">
+                    {getFieldDecorator('firstname', {
+                      rules: [{ required: true, message: 'กรุณาระบุชื่อ' }],
+                      onChange: this.inputChangeFunc,
+                      initialValue: props.firstname.value,
+                    })(<Input title="info" placeholder="ชื่อ" maxLength="255" />)}
+                  </FormItem>
+                </Col>
+                <Col span={1}>
+                  <span style={{ display: 'inline-block', width: '100%', textAlign: 'center' }}>
+                      &nbsp;
+                  </span>
+                </Col>
+                <Col {...colTwiceLayout} style={{ marginBottom: '16px' }}>
+                  <FormItem {...formItemLayout} label="นามสกุล">
+                    {getFieldDecorator('lastname', {
+                      rules: [{ required: true, message: 'กรุณาระบุนามสกุล' }],
+                      onChange: this.inputChangeFunc,
+                      initialValue: props.lastname.value,
+                      // validate: [{
+                      //   // trigger: ['onBlur'],
+                      //   rules: [{
+                      //     required: true,
+                      //     message: 'กรุณาระบุนามสกุล',
+                      //   }],
+                      // }],
+                    })(<Input title="info" placeholder="นามสกุล" maxLength="255" />)}
+                  </FormItem>
+                </Col>
               </FormItem>
             </Col>
             <Col span={2}>
@@ -212,19 +259,22 @@ class Info extends Component {
               </span>
             </Col>
             <Col {...colTwiceLayout}>
-              <FormItem {...formItemLayout} label="นามสกุล">
-                {getFieldDecorator('lastname', {
-                  rules: [{ required: true, message: 'กรุณาระบุนามสกุล' }],
-                  onChange: this.inputChangeFunc,
-                  initialValue: props.lastname.value,
-                  // validate: [{
-                  //   // trigger: ['onBlur'],
-                  //   rules: [{
-                  //     required: true,
-                  //     message: 'กรุณาระบุนามสกุล',
-                  //   }],
-                  // }],
-                })(<Input title="info" placeholder="นามสกุล" maxLength="255" />)}
+              <FormItem {...formItemLayout} label="หมายเลขบัตรประชาชนสำหรับใช้อ้างอิงการสมัคร">
+                {getFieldDecorator('citizen', {
+                  rules: [
+                    {
+                      required: true,
+                      type: 'string',
+                      len: 13,
+                      message: 'กรุณาระบุหมายเลขบัตรประชาชนสำหรับใช้อ้างอิงการสมัคร'
+                    },
+                    {
+                      validator: this.validateNationalID,
+                    },
+                  ],
+                  onChange: this.inputChangeCitizen,
+                  initialValue: props.citizen.value,
+                })(<Input title="info" placeholder="หมายเลขบัตรประชาชนสำหรับใช้อ้างอิงการสมัคร" maxLength="13" />)}
               </FormItem>
             </Col>
           </FormItem>

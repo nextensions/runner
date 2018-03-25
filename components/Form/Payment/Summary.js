@@ -71,8 +71,14 @@ class Summary extends Component {
     const runningFee = runnerType.filter(type => type.name === data.info.type)[0]
     const runningShirtInfo = shirtSize.filter(shirt => shirt.size === data.info.size)[0]
     const shippingFee = data.info.shipmethod !== 'pickup' ? 65 : 0
-    const districtLabel = data.address.province === 'กรุงเทพมหานคร' ? 'เขต' : 'อำเภอ'
-    const subDistrictLabel = data.address.province === 'กรุงเทพมหานคร' ? 'แขวง' : 'ตำบล'
+    let districtLabel = ''
+    let subDistrictLabel = ''
+
+    if (data.info.shipmethod === 'post') {
+      districtLabel = data.address.province === 'กรุงเทพมหานคร' ? 'เขต' : 'อำเภอ'
+      subDistrictLabel = data.address.province === 'กรุงเทพมหานคร' ? 'แขวง' : 'ตำบล'
+    }
+
 
     const gender = [
       { en: 'male', th: 'ชาย' },
@@ -96,7 +102,10 @@ class Summary extends Component {
               <Row type="flex" justify="end">
                 <Col span={24}>
                   <strong>ประเภท: </strong>{data.info.type} <strong>ระยะทาง: </strong>{data.info.distance} กิโลเมตร<br />
-                  <strong>เสื้อไซต์: </strong> {runningShirtInfo.size} (1 ตัว)
+                  {
+                    data.info.type !== 'นักเรียน' ?
+                      <div><strong>เสื้อไซต์: </strong> {runningShirtInfo.size} (1 ตัว)</div> : null
+                  }
                 </Col>
               </Row>
             </Panel>
