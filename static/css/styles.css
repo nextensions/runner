@@ -48,3 +48,44 @@
   border-color: #6d6d6d;
   font-weight: 200;
 }
+
+.avatar-uploader > .ant-upload {
+  width: 128px;
+  height: 128px;
+}
+
+.ant-upload-select-picture-card i {
+  font-size: 32px;
+  color: #999;
+}
+
+.ant-upload-select-picture-card .ant-upload-text {
+  margin-top: 8px;
+  color: #666;
+}
+
+.ant-upload.ant-upload-select-picture-card p.ant-upload-drag-icon .anticon {
+  font-size: 48px;
+  color: rgb(64, 169, 255);
+}
+
+.ant-upload.ant-upload-select-picture-card {
+  cursor: pointer;
+  text-align: center;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  border-width: 1px;
+  border-style: dashed;
+  border-color: rgb(217, 217, 217);
+  border-image: initial;
+  transition: border-color 0.3s;
+  border-radius: 4px;
+  padding: 16px 0px;
+  background: rgb(250, 250, 250);
+}
+.ant-upload.ant-upload-select-picture-card p.ant-upload-text {
+  font-size: 16px;
+  margin: 0 0 4px;
+  color: rgba(0, 0, 0, 0.85);
+}

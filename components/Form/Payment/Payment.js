@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { Form, Input, Row, Col, Radio, Divider, Tooltip, Upload, Icon, message, Card, Avatar, Modal } from 'antd'
 import { connect } from 'react-redux'
-import Dropzone from 'react-dropzone'
-import axios from 'axios'
+import { bindActionCreators } from 'redux'
 
+import { inputChange } from '../../../actions'
 import { runnerType, shirtSize } from '../../../config/'
 
 const FormItem = Form.Item
@@ -40,13 +40,39 @@ class Payment extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      fields: {
-        type: { value: '' },
-        distance: { value: '' },
-        size: { value: '' },
-      },
+      previewVisible: false,
+      previewImage: '',
+      fileList: [],
+      url: '',
+    }
+
+    this.handleSuccess = this.handleSuccess.bind(this)
+  }
+  handleCancel = () => this.setState({ previewVisible: false })
+
+  handlePreview = (file) => {
+    this.setState({
+      previewImage: file.url || file.thumbUrl,
+      previewVisible: true,
+    })
+  }
+  handleSuccess = (file) => {
+    this.setState({
+      previewImage: file.url || file.thumbUrl,
+      previewVisible: true,
+    })
+    const { inputChange } = this.props
+    inputChange('info', 'url', file.url)
+  }
+
+  handleChange = ({ fileList }) => {
+    this.setState({ fileList })
+    if (fileList[0].response) {
+      const { inputChange } = this.props
+      inputChange('info', 'url', fileList[0].response.url)
     }
   }
+
   componentWillMount() {
     const { data } = this.props
   }
@@ -57,9 +83,7 @@ class Payment extends Component {
         await this.setState({
           fields: {
             ...this.state.fields,
-            type: { value: info.type || this.state.fields.type.value },
-            distance: { value: info.distance || this.state.fields.distance.value },
-            size: { value: info.size || this.state.fields.size.value },
+            url: { value: info.url || this.state.fields.url.value },
           },
         })
       }
@@ -81,35 +105,17 @@ class Payment extends Component {
     inputChange('info', name, e.target.value)
   }
 
-  handleDrop = (files) => {
-    // Push all the axios request promise into a single array
-    const uploaders = files.map((file) => {
-      // Initial FormData
-      const formData = new FormData()
-      formData.append("file", file)
-      formData.append("tags", `nextschool, runner`)
-      formData.append("upload_preset", "ydk5ppag") // Replace the preset name with your own
-      formData.append("api_key", "814213397314329") // Replace API key with your own Cloudinary key
-      formData.append("timestamp", (Date.now() / 1000) | 0)
-
-      // Make an AJAX upload request using Axios (replace Cloudinary URL below with your own)
-      return axios.post("https://api.cloudinary.com/v1_1/pangpond/image/upload", formData, {
-        headers: { "X-Requested-With": "XMLHttpRequest" },
-      }).then((response) => {
-        const data = response.data
-        const fileURL = data.secure_url // You should store this URL for future references in your app
-        console.log(data)
-      })
-    })
-
-    // Once all the files are uploaded
-    axios.all(uploaders).then(() => {
-      // ... perform after upload is successful operation
-    })
-  }
-
   render() {
     const { previewVisible, previewImage, fileList } = this.state
+    const uploadButton = (
+      <div>
+        <p className="ant-upload-drag-icon">
+          <Icon type="inbox" />
+        </p>
+        <p className="ant-upload-text">คลิกเพื่ออัปโหลด</p>
+        <p className="ant-upload-hint">ไฟล์รูปภาพหลักฐานการโอนเงินขนาดไม่เกิน 5MB.</p>
+      </div>
+    )
 
     const { data } = this.props.state
     const runningFee = runnerType.filter(type => type.name === data.info.type)[0]
@@ -127,27 +133,34 @@ class Payment extends Component {
         tags: 'nextschool, runner',
         upload_preset: 'ydk5ppag',
         api_key: '814213397314329',
-        timestamp: (Date.now() / 1000) | 0,
+        timestamp: (Date.now() / 1000),
       },
       headers: {
         'X-Requested-With': 'XMLHttpRequest',
       },
-      beforeUpload(file) {
-        console.log('beforeUpload', file.name);
+      // beforeUpload(file) {
+      //   console.log('beforeUpload', file.name)
+      // },
+      // onStart: (file) => {
+      //   console.log('onStart', file.name)
+      //   // this.refs.inner.abort(file);
+      // },
+
+      // // onProgress(step, file) {
+      // //   console.log('onProgress', Math.round(step.percent), file.name);
+      // // },
+      // onError(err) {
+      //   console.log('onError', err)
+      // },
+      onPreview(file) {
+        this.handlePreview(file)
       },
-      onStart: (file) => {
-        console.log('onStart', file.name);
-        // this.refs.inner.abort(file);
+      onChange(file) {
+        this.handleChange(file)
       },
-      onSuccess(file) {
-        console.log('onSuccess', file);
-      },
-      onProgress(step, file) {
-        console.log('onProgress', Math.round(step.percent), file.name);
-      },
-      onError(err) {
-        console.log('onError', err);
-      },
+      // onSuccess(file) {
+      //   this.handlePreview(file)
+      // },
     }
 
     return (
@@ -174,22 +187,15 @@ class Payment extends Component {
               </strong>
             </Col>
           </Row>
-
-          <Dropzone
-            onDrop={this.handleDrop}
-            multiple
-            accept="image/*"
+          <Upload
+            {...uploadProps}
+            listType="picture-card"
+            fileList={fileList}
+            onPreview={this.handlePreview}
+            onChange={this.handleChange}
           >
-            <p>Drop your files or click here to upload</p>
-          </Dropzone>
-
-          <Dragger {...uploadProps}>
-            <p className="ant-upload-drag-icon">
-              <Icon type="inbox" />
-            </p>
-            <p className="ant-upload-text">คลิกหรือลากไฟล์มายังพื้นที่นี้เพื่ออัปโหลด</p>
-            <p className="ant-upload-hint">ไฟล์รูปภาพหลักฐานการโอนเงินขนาดไม่เกิน 5MB.</p>
-          </Dragger>
+            {fileList.length === 1 ? null : uploadButton}
+          </Upload>
           <Modal visible={previewVisible} footer={null} onCancel={this.handleCancel}>
             <img alt="example" style={{ width: '100%' }} src={previewImage} />
           </Modal>
@@ -203,4 +209,12 @@ const mapStateToProps = state => ({
   state,
 })
 
-export default connect(mapStateToProps)(Payment)
+const mapDispatchToProps = dispatch => ({
+  inputChange: bindActionCreators(inputChange, dispatch),
+})
+
+export default Form.create({
+  onFieldsChange(props, changedFields) {
+    props.onChange(changedFields)
+  }})(connect(mapStateToProps, mapDispatchToProps)(Payment))
+
