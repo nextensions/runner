@@ -84,7 +84,6 @@ class RegisterForm extends Component {
       message.warning('กรุณาระบุวิธีจัดส่งเสื้อ และเบอร์ BIB')
     }
   }
-
   prev() {
     const current = this.state.current - 1
     this.setState({ current })
@@ -92,6 +91,25 @@ class RegisterForm extends Component {
   goto(index) {
     const current = index
     this.setState({ current })
+  }
+
+  handleSubmit() {
+    const { data } = this.props.state
+    const { info } = data
+
+    if (typeof info !== 'undefined') {
+      const { url, agreement } = info
+      if (typeof url !== 'undefined' && typeof agreement !== 'undefined') {
+        console.log('post')
+        // validate all data again
+        // submit to api
+        // redirect to thank page
+      } else {
+        message.warning('กรุณากรอกข้อมูลให้ครบถ้วน')
+        return
+      }
+    }
+
   }
   render() {
     const { current } = this.state
@@ -126,7 +144,7 @@ class RegisterForm extends Component {
                 <Button
                   type="success"
                   size="large"
-                  onClick={() => message.success('Processing complete!')}
+                  onClick={() => this.handleSubmit()}
                 >
                   <Icon type="save" />
                   ยืนยันการสมัครและชำระค่าบริการ

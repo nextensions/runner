@@ -67,9 +67,11 @@ class Payment extends Component {
 
   handleChange = ({ fileList }) => {
     this.setState({ fileList })
-    if (fileList[0].response) {
-      const { inputChange } = this.props
-      inputChange('info', 'url', fileList[0].response.url)
+    if (fileList.length) {
+      if (fileList[0].response) {
+        const { inputChange } = this.props
+        inputChange('info', 'url', fileList[0].response.url)
+      }
     }
   }
 
