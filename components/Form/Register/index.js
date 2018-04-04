@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
-import { Steps, Button, message, Icon, Row, Col } from 'antd'
+import { Steps, Button, message, Icon, Row, Col, Progress, Layout } from 'antd'
 import { connect } from 'react-redux'
 
 const axios = require('axios')
 
 const { Step } = Steps
+const { Header, Footer, Sider, Content } = Layout
 
 const steps = [
   {
@@ -37,6 +38,8 @@ class RegisterForm extends Component {
     super(props)
     this.state = {
       current: 0,
+      finish: false,
+      percent: 0,
     }
   }
   next() {
@@ -105,8 +108,8 @@ class RegisterForm extends Component {
       if (typeof url !== 'undefined' && typeof agreement !== 'undefined') {
         const registrantInfo = { data: [data] }
         this.register(registrantInfo)
-        console.log('post')
-        console.log(registrantInfo)
+        // console.log('post')
+        // console.log(registrantInfo)
         // validate all data again
         // submit to api
         // redirect to thank page
@@ -144,6 +147,7 @@ class RegisterForm extends Component {
       .then((data) => {
         if (data.status === 'success') {
           console.log('completed')
+          this.setState({ finish: true })
           // steps = [
           //   {
           //     key: 'register',
@@ -170,49 +174,75 @@ class RegisterForm extends Component {
 
     this.setState({ loading: false })
   }
-  render() {
-    const { current } = this.state
-    const { stepContent } = this.props
+  renderFinished = () => {
+
+    setInterval(() => {
+      const percent = this.state.percent < 100 ? this.state.percent += 10 : this.state.percent
+      this.setState({
+        percent,
+      })
+    }, 200)
+
     return (
       <div>
-        <Steps current={current}>
-          {steps.map((item, index) => (
-            <Step
-              key={item.title}
-              title={item.title}
-              description={item.content}
-              onClick={() => this.goto(index)}
-            />
-          ))}
-        </Steps>
-        <div className="steps-content">{stepContent[this.state.current].content}</div>
-        <div className="steps-action">
-          <Row>
-            <Col span={24} style={{ textAlign: 'right' }}>
-              {this.state.current > 0 && (
-                <Button size="large" style={{ marginRight: 8 }} onClick={() => this.prev()}>
-                  <Icon type="left" />ย้อนกลับ
-                </Button>
-              )}
-              {this.state.current < steps.length - 1 && (
-                <Button type="primary" size="large" onClick={() => this.next()}>
-                  ต่อไป<Icon type="right" />
-                </Button>
-              )}
-              {this.state.current === steps.length - 1 && (
-                <Button
-                  type="success"
-                  size="large"
-                  onClick={() => this.handleSubmit()}
-                >
-                  <Icon type="save" />
-                  ยืนยันการสมัครและชำระค่าบริการ
-                </Button>
-              )}
+        <Row type="flex" justify="center">
+          <Row gutter={8}>
+
+            <Col span={24} style={{ textAlign: 'center', marginTop: '20px' }} >
+              <Progress type="circle" percent={this.state.percent} /><br/>
+              <p className="ant-upload-text" style={{ textAlign: 'center', fontSize: '22px', marginTop: '20px' }}>สมัครสำเร็จ</p>
+              <p className="ant-upload-text" style={{ textAlign: 'center' }}>ใส่เนื้อหาเพิ่มเติมตรงนี้</p>
             </Col>
           </Row>
-        </div>
+        </Row>
       </div>
+    )
+  }
+  render() {
+    const { current, finish } = this.state
+    const { stepContent } = this.props
+    return (
+      finish ?
+        this.renderFinished() :
+        <div>
+          <Steps current={current}>
+            {steps.map((item, index) => (
+              <Step
+                key={item.title}
+                title={item.title}
+                description={item.content}
+                onClick={() => this.goto(index)}
+              />
+            ))}
+          </Steps>
+          <div className="steps-content">{stepContent[this.state.current].content}</div>
+          <div className="steps-action">
+            <Row>
+              <Col span={24} style={{ textAlign: 'right' }}>
+                {this.state.current > 0 && (
+                  <Button size="large" style={{ marginRight: 8 }} onClick={() => this.prev()}>
+                    <Icon type="left" />ย้อนกลับ
+                  </Button>
+                )}
+                {this.state.current < steps.length - 1 && (
+                  <Button type="primary" size="large" onClick={() => this.next()}>
+                    ต่อไป<Icon type="right" />
+                  </Button>
+                )}
+                {this.state.current === steps.length - 1 && (
+                  <Button
+                    type="success"
+                    size="large"
+                    onClick={() => this.handleSubmit()}
+                  >
+                    <Icon type="save" />
+                    ยืนยันการสมัครและชำระค่าบริการ
+                  </Button>
+                )}
+              </Col>
+            </Row>
+          </div>
+        </div>
     )
   }
 }

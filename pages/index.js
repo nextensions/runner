@@ -31,23 +31,22 @@ class Admission extends Component {
               style={{ lineHeight: '64px' }}
             >
               <Menu.Item key="1">แบบฟอร์มรับสมัคร</Menu.Item>
-              <Menu.Item key="2">E-Ticket (สำหรับรับเสื้อหน้างาน)</Menu.Item>
-              <Menu.Item key="3">ขั้นตอนการสมัคร</Menu.Item>
-              <Menu.Item key="4">รายละเอียดโครงการ</Menu.Item>
+              <Menu.Item key="2">ขั้นตอนการสมัคร</Menu.Item>
+              <Menu.Item key="3">รายละเอียดโครงการ</Menu.Item>
             </Menu>
           </Header>
           <Content style={{ padding: '0 50px' }}>
             <Breadcrumb style={{ margin: '16px 0' }}>
-              <Breadcrumb.Item>Home</Breadcrumb.Item>
-              <Breadcrumb.Item>List</Breadcrumb.Item>
-              <Breadcrumb.Item>App</Breadcrumb.Item>
+              <Breadcrumb.Item>แบบฟอร์มรับสมัคร</Breadcrumb.Item>
+              {/*<Breadcrumb.Item>List</Breadcrumb.Item>
+              <Breadcrumb.Item>App</Breadcrumb.Item>*/}
             </Breadcrumb>
             <div style={{ background: '#fff', padding: 24, minHeight: 280 }}>
               <Runner data={this.props.data} />
             </div>
-            <DisplayForm />
+            {/*<DisplayForm />*/}
           </Content>
-          <Footer style={{ textAlign: 'center' }}>Admission ©2018 Created by NextSchool</Footer>
+          <Footer style={{ textAlign: 'center' }}>Runner ©2018 Created by NextSchool</Footer>
         </Layout>
       </Wrapper>
     )

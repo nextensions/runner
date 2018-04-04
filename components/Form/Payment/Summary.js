@@ -92,7 +92,7 @@ class Summary extends Component {
             <Panel header="ข้อมูลส่วนตัว" key="1">
               <Row type="flex" justify="end">
                 <Col span={24}>
-                  <strong>ชื่อ-นามสกุล: </strong>{`${data.info.firstname} ${data.info.firstname}`} <strong>เพศ: </strong>{gender.filter(sex => sex.en === data.info.gender)[0].th} <strong>อายุ: </strong>{`${data.info.age} ปี`}<br />
+                  <strong>ชื่อ-นามสกุล: </strong>{`${data.info.firstname} ${data.info.lastname}`} <strong>เพศ: </strong>{gender.filter(sex => sex.en === data.info.gender)[0].th} <strong>อายุ: </strong>{`${data.info.age} ปี`}<br />
                   <strong>อีเมล: </strong>{data.info.email} <strong>มือถือ: </strong> {data.info.mobile}<br />
                   <strong>กรณีฉุกเฉินติดต่อ: </strong>{`${data.info.emer_person} (${data.info.emer_contact})`}<br />
                 </Col>
