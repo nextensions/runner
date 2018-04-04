@@ -7,6 +7,8 @@ const axios = require('axios')
 const { Step } = Steps
 const { Header, Footer, Sider, Content } = Layout
 
+console.log = function() {}
+
 const steps = [
   {
     title: 'นักวิ่ง',
@@ -176,18 +178,22 @@ class RegisterForm extends Component {
   }
   renderFinished = () => {
 
-    setInterval(() => {
-      const percent = this.state.percent < 100 ? this.state.percent += 10 : this.state.percent
-      this.setState({
-        percent,
-      })
-    }, 200)
+    let animate
+    if (this.state.percent < 100) {
+      animate = setInterval(() => {
+        const percent = this.state.percent < 100 ? this.state.percent += 10 : this.state.percent
+        this.setState({
+          percent,
+        })
+      }, 200)
+    } else {
+      clearInterval(animate)
+    }
 
     return (
       <div>
         <Row type="flex" justify="center">
           <Row gutter={8}>
-
             <Col span={24} style={{ textAlign: 'center', marginTop: '20px' }} >
               <Progress type="circle" percent={this.state.percent} /><br/>
               <p className="ant-upload-text" style={{ textAlign: 'center', fontSize: '22px', marginTop: '20px' }}>สมัครสำเร็จ</p>

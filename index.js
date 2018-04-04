@@ -8,12 +8,6 @@ export default ({ children }) => (
       <link rel="stylesheet" href="//unpkg.com/antd@3/dist/antd.min.css" />
       <link rel="stylesheet" href="/static/css/styles.css" />
     </Head>
-    <style jsx global>
-      {`
-        body {
-        }
-      `}
-    </style>
     {children}
   </div>
 )
