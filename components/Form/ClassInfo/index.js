@@ -40,6 +40,7 @@ class RunnerTypeInfo extends Component {
         type: { value: '' },
         distance: { value: '' },
         size: { value: '' },
+        team: { value: '' },
       },
     }
   }
@@ -57,6 +58,7 @@ class RunnerTypeInfo extends Component {
             type: { value: info.type || this.state.fields.type.value },
             distance: { value: info.distance || this.state.fields.distance.value },
             size: { value: info.size || this.state.fields.size.value },
+            team: { value: info.team || this.state.fields.team.value },
           },
         })
       }

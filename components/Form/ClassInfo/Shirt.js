@@ -120,6 +120,11 @@ const Shirt = Form.create({
     inputChange('info', name, e.target.value)
   }
 
+  const setModalVisible = (modalVisible) => {
+    console.log('hide')
+    // this.setState({ modalVisible })
+  }
+
   const defaultAddress = {
     s: props.prev_edu_name,
     a: props.prev_edu_sub_district,
@@ -129,16 +134,18 @@ const Shirt = Form.create({
 
   const modalShirt = () => {
     const modal = Modal.success({
-      title: 'This is a notification message',
-      content: 'This modal will be destroyed after 1 second',
+      width: '70%',
+      visible: props.modalVisible,
+      style: { top: 20 },
+      title: 'ตัวอย่างแบบเสื้อ',
+      content: (<img alt="แบบเสื้อ" src="static/images/shirt.png" style={{ width: '100%' }} />),
     })
-    // setTimeout(() => modal.destroy(), 1000)
   }
 
   return (
     <Row gutter={16} justify="center" type="flex">
       <Col {...colLayout}>
-        <img alt="example" src="static/images/shirt.png" style={{width: "100%"}} onClick={modalShirt} />
+        <img alt="แบบเสื้อ" src="static/images/shirt-thumb.png" style={{ width: '100%' }} onClick={modalShirt} />
         <FormItem label="ขนาดเสื้อ">
           {getFieldDecorator('size', {
             rules: [{ required: true, message: 'กรุณาระบุขนาดเสื้อ' }],

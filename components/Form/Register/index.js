@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import { Steps, Button, message, Icon, Row, Col } from 'antd'
 import { connect } from 'react-redux'
 
+const axios = require('axios')
+
 const { Step } = Steps
 
 const steps = [
@@ -95,21 +97,78 @@ class RegisterForm extends Component {
 
   handleSubmit() {
     const { data } = this.props.state
-    const { info } = data
+    const { info, payment } = data
 
     if (typeof info !== 'undefined') {
-      const { url, agreement } = info
+      const { agreement } = info
+      const { url } = payment
       if (typeof url !== 'undefined' && typeof agreement !== 'undefined') {
+        const registrantInfo = { data: [data] }
+        this.register(registrantInfo)
         console.log('post')
+        console.log(registrantInfo)
         // validate all data again
         // submit to api
         // redirect to thank page
       } else {
-        message.warning('กรุณากรอกข้อมูลให้ครบถ้วน')
+        message.warning('กรุณาแนบหลักฐานการชำระเงิน และยอมรับเงื่อนใข')
         return
       }
     }
+  }
 
+  register = async (bodyProperty) => {
+    const res = await fetch(`${process.env.API_URL}/register`, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        Authorization: `Basic ${btoa(process.env.USERNAME + ':' + process.env.PASSWORD)}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        ...bodyProperty,
+      }),
+      // credentials: 'same-origin',
+    })
+      .then((response) => {
+        if (response.status >= 400) {
+          throw new Error('API Server Error')
+        }
+        if (response.status === 204) {
+          return {
+            status: 'options',
+          }
+        }
+        return response.json()
+      })
+      .then((data) => {
+        if (data.status === 'success') {
+          console.log('completed')
+          // steps = [
+          //   {
+          //     key: 'register',
+          //     title: 'กรอกข้อมูล',
+          //     completed: true,
+          //     description: 'ชื่อ-สกุล, สถานศึกษา',
+          //   },
+          //   {
+          //     key: 'finish',
+          //     active: true,
+          //     completed: true,
+          //     title: 'สำเร็จ',
+          //     description: 'ได้รับข้อมูลเรียบร้อยแล้ว',
+          //   },
+          // ]
+          // this.setState({ finish: true, steps })
+        } else if (data.status === 'fail') {
+          this.setState({
+            error: true,
+            errorMsg: 'ผิดพลาด ไม่สามารถบันทึกข้อมูลสมัครได้',
+          })
+        }
+      })
+
+    this.setState({ loading: false })
   }
   render() {
     const { current } = this.state

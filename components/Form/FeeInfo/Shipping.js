@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import moment from 'moment'
 
+import { runnerType } from '../../../config/'
 import { inputChange } from '../../../actions'
 import Typeahead from '../../Typeahead/'
 import { fieldsEnum, resolveResultbyField } from '../../Typeahead/finderAddress'
@@ -159,19 +160,17 @@ class Shipping extends Component {
     const { id, title, value } = e.target
     inputChange(title, id, value)
   }
-  changeWeight = (value) => {
-    const { inputChange } = this.props
-    inputChange('info', 'weight', value)
-  }
-
-  changeHeight = (value) => {
-    const { inputChange } = this.props
-    inputChange('info', 'height', value)
-  }
 
   changeCheckButton = (e, name) => {
     const { inputChange } = this.props
     inputChange('info', name, e.target.value)
+
+    const { data } = this.props.state
+    const runningFee = runnerType.filter(type => type.name === data.info.type)[0]
+    const shippingFee = e.target.value !== 'pickup' ? 65 : 0
+
+    inputChange('payment', 'fee', shippingFee)
+    inputChange('payment', 'amount', runningFee.fee)
   }
 
   render() {

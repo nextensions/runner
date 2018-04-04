@@ -130,7 +130,7 @@ const Shirt = Form.create({
   const modalShirt = () => {
     const modal = Modal.success({
       title: 'This is a notification message',
-      content: 'This modal will be destroyed after 1 second',
+      content: (<img alt="แบบเสื้อ" src="static/images/shirt.png" style={{width: "100%"}} />),
     })
     // setTimeout(() => modal.destroy(), 1000)
   }
@@ -138,7 +138,7 @@ const Shirt = Form.create({
   return (
     <Row gutter={16} justify="center" type="flex">
       <Col {...colLayout}>
-        <img alt="example" src="static/images/shirt.png" style={{width: "100%"}} onClick={modalShirt} />
+        <img alt="แบบเสื้อ" src="static/images/shirt-thumb.png" style={{width: "100%"}} onClick={modalShirt} />
         <FormItem label="ขนาดเสื้อ">
           {getFieldDecorator('size', {
             rules: [{ required: true, message: 'กรุณาระบุขนาดเสื้อ' }],

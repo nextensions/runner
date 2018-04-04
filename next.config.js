@@ -1,4 +1,6 @@
 const Uglify = require('uglifyjs-webpack-plugin')
+const { parsed: localEnv } = require('dotenv').config()
+const webpack = require('webpack')
 
 module.exports = {
   exportPathMap() {
@@ -6,6 +8,16 @@ module.exports = {
       '/': { page: '/' },
       '/register': { page: '/register' },
     }
+  },
+
+  // webpack: (config) => {
+  //   config.plugins.push(new webpack.EnvironmentPlugin(process.env))
+  //   return config
+  // },
+
+  webpack: (config) => {
+    config.plugins.push(new webpack.EnvironmentPlugin(localEnv))
+    return config
   },
 
   // webpack(cfg) {

@@ -195,7 +195,16 @@ class RunnerClass extends Component {
                 </RadioGroup>)}
             </FormItem> : null
           }
+          <FormItem {...formItemLayout}>
           <strong className="ant-form-item-required">({this.renderRunnerGen()})</strong>
+          </FormItem>
+          <FormItem {...formItemLayout} label="ชื่อทีม (ถ้ามี)">
+            {getFieldDecorator('team', {
+              rules: [{ required: false, message: 'กรุณาระบุชื่อทีม (ถ้ามี)' }],
+              onChange: this.inputChangeFunc,
+              initialValue: props.team.value,
+            })(<Input title="info" placeholder="ชื่อทีม" maxLength="255" />)}
+          </FormItem>
         </Col>
       </Row>
     )

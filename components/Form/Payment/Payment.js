@@ -62,7 +62,7 @@ class Payment extends Component {
       previewVisible: true,
     })
     const { inputChange } = this.props
-    inputChange('info', 'url', file.url)
+    inputChange('payment', 'url', file.url)
   }
 
   handleChange = ({ fileList }) => {
@@ -70,7 +70,7 @@ class Payment extends Component {
     if (fileList.length) {
       if (fileList[0].response) {
         const { inputChange } = this.props
-        inputChange('info', 'url', fileList[0].response.url)
+        inputChange('payment', 'url', fileList[0].response.url)
       }
     }
   }
@@ -101,6 +101,11 @@ class Payment extends Component {
     const { id, title, value } = e.target
     inputChange(title, id, value)
   }
+  setPayment = (fee, amount) => {
+    const { inputChange } = this.props
+    inputChange('payment', 'fee', fee)
+    inputChange('payment', 'amount', amount)
+  }
 
   changeCheckButton = (e, name) => {
     const { inputChange } = this.props
@@ -126,15 +131,17 @@ class Payment extends Component {
 
     const gender = [{ en: 'male', th: 'ชาย' }, { en: 'female', th: 'หญิง' }]
 
+    // this.setPayment(shippingFee, runningFee.fee + shippingFee)
+
     const uploadProps = {
       name: 'file',
       multiple: false,
-      action: 'https://api.cloudinary.com/v1_1/pangpond/image/upload',
+      action: process.env.CLOUDINARY_API_URL,
       data: {
         file: file => file,
         tags: 'nextschool, runner',
-        upload_preset: 'ydk5ppag',
-        api_key: '814213397314329',
+        upload_preset: process.env.CLOUDINARY_API_PRESET,
+        api_key: process.env.CLOUDINARY_API_KEY,
         timestamp: (Date.now() / 1000),
       },
       headers: {
