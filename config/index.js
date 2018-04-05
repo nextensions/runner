@@ -8,7 +8,7 @@ export const runnerType = [
   {
     name: 'นักเรียน รับเสื้อ',
     fee: 400,
-    distance: [5],
+    distance: [5, 10],
     age: { min: 4, max: 18 },
   },
   {

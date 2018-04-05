@@ -208,9 +208,6 @@ class Shipping extends Component {
                   <strong>มารับด้วยตนเอง ณ โรงเรียนสิริรัตนาธร</strong><br />
                   <em style={{ marginLeft: '20px' }}>
                     วันศุกร์ที่ 1 มิถุนายน 2561 ตั้งแต่เวลา 12.00 – 19.00 น.
-                  </em><br />
-                  <em style={{ marginLeft: '20px' }}>
-                    และวันเสาร์ที่ 2 มิถุนายน 2561 ตั้งแต่เวลา 04.00 – 05.00 น.
                   </em>
                 </Radio>
               </RadioGroup>)}

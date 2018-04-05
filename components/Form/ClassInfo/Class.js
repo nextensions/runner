@@ -101,7 +101,7 @@ class RunnerClass extends Component {
       { min: 13, max: 14, title: 'อายุ 13 - 14 ปี' },
       { min: 15, max: 16, title: 'อายุ 15 - 16 ปี' },
       { min: 17, max: 18, title: 'อายุ 17 - 18 ปี' },
-      { min: 19, max: 29, title: 'อายุไม่เกิน 29 ปี' },
+      { min: 20, max: 29, title: 'อายุ 20 - 29 ปี' },
       { min: 30, max: 39, title: 'อายุ 30 - 39 ปี' },
       { min: 40, max: 49, title: 'อายุ 40 - 49 ปี' },
       { min: 59, max: 59, title: 'อายุ 50 - 59 ปี' },
@@ -161,7 +161,16 @@ class RunnerClass extends Component {
 
   renderRunnerGen() {
     const runnerGeneration = this.state.runnerGen.filter(gen => gen.min <= this.props.age && gen.max >= this.props.age)
-    return `จัดอยู่ในรุ่น${runnerGeneration[0].title}`
+
+    const student10K = 'อายุไม่เกิน 19 ปี'
+    let division = runnerGeneration[0].title
+
+    if (this.props.distance.value === 10 && this.props.type.value === 'นักเรียน รับเสื้อ') {
+      division = student10K
+    }
+
+
+    return `จัดอยู่ในรุ่น${division}`
   }
 
 

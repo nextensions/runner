@@ -7,7 +7,7 @@ const axios = require('axios')
 const { Step } = Steps
 const { Header, Footer, Sider, Content } = Layout
 
-console.log = function() {}
+// console.log = function() {}
 
 const steps = [
   {
@@ -217,7 +217,6 @@ class RegisterForm extends Component {
                 key={item.title}
                 title={item.title}
                 description={item.content}
-                onClick={() => this.goto(index)}
               />
             ))}
           </Steps>
