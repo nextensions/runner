@@ -7,7 +7,7 @@ const axios = require('axios')
 const { Step } = Steps
 const { Header, Footer, Sider, Content } = Layout
 
-// console.log = function() {}
+console.log = function() {}
 
 const steps = [
   {
@@ -102,24 +102,26 @@ class RegisterForm extends Component {
 
   handleSubmit() {
     const { data } = this.props.state
-    const { info, payment } = data
+    const { info, payment, members } = data
 
     if (typeof info !== 'undefined') {
       const { agreement } = info
       const { url } = payment
       if (typeof url !== 'undefined' && typeof agreement !== 'undefined') {
-        const registrantInfo = { data: [data] }
+        let registrantInfo = { data: [data] }
+        if (members !== undefined) {
+          const membersInfo = members.map(member => ({ info: member }))
+          registrantInfo = { data: [data, ...membersInfo] }
+        }
+        console.log(registrantInfo)
         this.register(registrantInfo)
-        // console.log('post')
-        // console.log(registrantInfo)
-        // validate all data again
-        // submit to api
-        // redirect to thank page
       } else {
         message.warning('กรุณาแนบหลักฐานการชำระเงิน และยอมรับเงื่อนใข')
-        return
+        return null
       }
     }
+
+    return null
   }
 
   register = async (bodyProperty) => {
@@ -150,23 +152,8 @@ class RegisterForm extends Component {
         if (data.status === 'success') {
           console.log('completed')
           this.setState({ finish: true })
-          // steps = [
-          //   {
-          //     key: 'register',
-          //     title: 'กรอกข้อมูล',
-          //     completed: true,
-          //     description: 'ชื่อ-สกุล, สถานศึกษา',
-          //   },
-          //   {
-          //     key: 'finish',
-          //     active: true,
-          //     completed: true,
-          //     title: 'สำเร็จ',
-          //     description: 'ได้รับข้อมูลเรียบร้อยแล้ว',
-          //   },
-          // ]
-          // this.setState({ finish: true, steps })
-        } else if (data.status === 'fail') {
+        } else if (data.status === 'not') {
+          message.warning('ไม่สามารถสมัครได้ กรุณาติดต่อ คุณหนาม โทร 088-469-4806', 30)
           this.setState({
             error: true,
             errorMsg: 'ผิดพลาด ไม่สามารถบันทึกข้อมูลสมัครได้',
@@ -197,7 +184,10 @@ class RegisterForm extends Component {
             <Col span={24} style={{ textAlign: 'center', marginTop: '20px' }} >
               <Progress type="circle" percent={this.state.percent} /><br/>
               <p className="ant-upload-text" style={{ textAlign: 'center', fontSize: '22px', marginTop: '20px' }}>สมัครสำเร็จ</p>
-              <p className="ant-upload-text" style={{ textAlign: 'center' }}>ใส่เนื้อหาเพิ่มเติมตรงนี้</p>
+              <p className="ant-upload-text" style={{ textAlign: 'center' }}>
+                การสมัครจะสมบูรณ์เมื่อท่านได้รับ E-mail ตอบรับภายใน 7 วัน<br />
+                หากมีข้อสงสัยกรุณาติดต่อ &nbsp;<a href="https://www.facbook.com/srtrunning">www.facbook.com/srtrunning</a>
+              </p>
             </Col>
           </Row>
         </Row>

@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 
 import Class from './Class'
 import Shirt from './Shirt'
-// import Address from './Address'
+import Members from './Members'
 
 const cardLayout = {
   xs: { span: 24 },
@@ -12,6 +12,14 @@ const cardLayout = {
   md: { span: 12 },
   lg: { span: 12 },
   xl: { span: 12 },
+}
+
+const cardLayoutFull = {
+  xs: { span: 24 },
+  sm: { span: 24 },
+  md: { span: 24 },
+  lg: { span: 24 },
+  xl: { span: 24 },
 }
 
 const cardTitle = (step, title) => (
@@ -41,6 +49,8 @@ class RunnerTypeInfo extends Component {
         distance: { value: '' },
         size: { value: '' },
         team: { value: '' },
+        member: { value: '' },
+        members: { value: [] },
       },
     }
   }
@@ -59,6 +69,17 @@ class RunnerTypeInfo extends Component {
             distance: { value: info.distance || this.state.fields.distance.value },
             size: { value: info.size || this.state.fields.size.value },
             team: { value: info.team || this.state.fields.team.value },
+            member: { value: info.member || this.state.fields.member.value },
+          },
+        })
+      }
+
+      if (data.hasOwnProperty('members')) {
+        const { members } = data
+        await this.setState({
+          fields: {
+            ...this.state.fields,
+            members: { value: members.info || this.state.fields.members.value },
           },
         })
       }
@@ -71,7 +92,7 @@ class RunnerTypeInfo extends Component {
   }
   render() {
     const { fields } = this.state
-    const { info } = this.props.state.data
+    const { info, members } = this.props.state.data
 
     return (
       <Form layout="vertical" onSubmit={this.handleSubmit}>
@@ -90,6 +111,17 @@ class RunnerTypeInfo extends Component {
               </Col> : null
           }
         </Row>
+        {
+          (members !== undefined && members.length) ? (
+            <Row gutter={16}>
+              <Col {...cardLayoutFull} style={{ marginTop: '15px' }}>
+                <Card title={cardTitle('2.3', 'สมาชิกเพิ่มเติม')} bordered={false}>
+                  <Members {...fields} onChange={this.handleFormChange} age={info.age} />
+                </Card>
+              </Col>
+            </Row>
+          ) : null
+        }
       </Form>
     )
   }

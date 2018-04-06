@@ -48,6 +48,9 @@ class Payment extends Component {
 
     this.handleSuccess = this.handleSuccess.bind(this)
   }
+  componentWillMount() {
+    const { data } = this.props
+  }
   handleCancel = () => this.setState({ previewVisible: false })
 
   handlePreview = (file) => {
@@ -125,6 +128,7 @@ class Payment extends Component {
     )
 
     const { data } = this.props.state
+    const { payment } = data
     const runningFee = runnerType.filter(type => type.name === data.info.type)[0]
     const runningShirtInfo = shirtSize.filter(shirt => shirt.size === data.info.size)[0]
     const shippingFee = data.info.shipmethod !== 'pickup' ? 65 : 0
@@ -191,7 +195,7 @@ class Payment extends Component {
             </Col>
             <Col span={12} align="right">
               <strong style={{ fontSize: 22 }}>
-                {(runningFee.fee + shippingFee).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')}{' '}
+                {(payment.amount + payment.fee).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')}{' '}
                 บาท
               </strong>
             </Col>

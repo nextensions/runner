@@ -118,16 +118,6 @@ class Info extends Component {
     inputChange(title, id, value)
   }
 
-  changeWeight = (value) => {
-    const { inputChange } = this.props
-    inputChange('info', 'weight', value)
-  }
-
-  changeHeight = (value) => {
-    const { inputChange } = this.props
-    inputChange('info', 'height', value)
-  }
-
   changeCheckButton = (e, name) => {
     const { inputChange } = this.props
     inputChange('info', name, e.target.value)

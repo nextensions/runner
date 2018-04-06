@@ -1,4 +1,4 @@
-import { INPUT_VALUE, KEEP_DATA, FETCH_DATA } from '../constants'
+import { INPUT_VALUE, KEEP_DATA, FETCH_DATA, INPUT_MEMBER } from '../constants'
 
 export const inputChange = (title, name, val) => dispatch =>
   dispatch({
@@ -6,6 +6,14 @@ export const inputChange = (title, name, val) => dispatch =>
     title,
     name,
     val,
+  })
+
+export const inputChangeMember = (title, index, members) => dispatch =>
+  dispatch({
+    type: INPUT_MEMBER,
+    title,
+    index,
+    members,
   })
 
 export const keepData = params => ({
