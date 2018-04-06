@@ -8,13 +8,12 @@ export const inputChange = (title, name, val) => dispatch =>
     val,
   })
 
-export const inputChangeMember = (title, index, name, val) => dispatch =>
+export const inputChangeMember = (title, index, members) => dispatch =>
   dispatch({
     type: INPUT_MEMBER,
     title,
     index,
-    name,
-    val,
+    members,
   })
 
 export const keepData = params => ({

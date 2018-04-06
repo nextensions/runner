@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Form, Input, Row, Col, Radio, Divider, Tooltip, Select, Modal, Button, InputNumber } from 'antd'
+import { Form, Input, Row, Col, Radio, Divider, Tooltip, Select, Modal, Button, InputNumber, message } from 'antd'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import moment from 'moment'
@@ -90,10 +90,18 @@ const colTrippleTailLayout = {
 
 
 class RunnerClass extends Component {
-
+  static async getInitialProps({
+    store, isServer, pathname, query,
+  }) {
+    const data = await store.getState().data
+    return { data }
+  }
   constructor(props) {
     super(props)
     this.inputChangeFunc = this.inputChangeFunc.bind(this)
+  }
+  componentWillMount() {
+    const { data } = this.props
   }
 
   state = {
@@ -134,11 +142,28 @@ class RunnerClass extends Component {
   }
   handleOk = () => {
     this.setState({ loading: true })
-    console.log(this.state)
-    setTimeout(() => {
-      this.setState({ loading: false, visible: false })
-    }, 3000)
+    const {
+      firstname, lastname, citizen, date, month, year, dob, age, gender, distance, type, size
+    } = this.state.members
+
+    // console.log(this.props.state.data.members.length)
+
+    if (firstname !== undefined && lastname !== undefined && citizen !== undefined && dob !== undefined && age !== undefined && gender !== undefined && distance !== undefined && type !== undefined && size !== undefined) {
+      // console.log(this.state.members)
+      const memberIndex = this.props.state.data.members.length
+      const { inputChangeMember } = this.props
+      inputChangeMember('members', memberIndex, this.state.members)
+
+      setTimeout(() => {
+        this.setState({ loading: false, visible: false })
+      }, 3000)
+    } else {
+      message.warning('กรุณากรอกข้อมูลให้ครบถ้วน')
+      this.setState({ loading: false })
+    }
+    // console.log(this.state)
   }
+
   handleCancel = () => {
     this.setState({ visible: false })
   }
@@ -236,12 +261,15 @@ class RunnerClass extends Component {
         },
       })
 
-      // console.log(this.state)
     }
 
     const changeCheckButton = (e, name) => {
-      const { inputChange } = this.props
-      inputChange(memberNo, name, e.target.value)
+      this.setState({
+        members: {
+          ...this.state.members,
+          [name]: e.target.value,
+        },
+      })
     }
 
     const changeDate = (value) => {
@@ -457,11 +485,7 @@ class RunnerClass extends Component {
               </FormItem>
             </Col>
           </FormItem>
-          <FormItem {...formItemLayout} >
-            <Col {...colTwiceLayout} style={{ marginBottom: '16px' }}>
-              {this.renderSelectRunnerType('')}
-            </Col>
-          </FormItem>
+          {this.renderSelectRunnerTypeForMembers('')}
         </Col>
       </Row>
     )
@@ -490,6 +514,108 @@ class RunnerClass extends Component {
     )
   }
 
+  renderSelectRunnerTypeForMembers(type, distance) {
+    const { getFieldDecorator } = this.props.form
+
+    const changeCheckButton = (e, name) => {
+      this.setState({
+        members: {
+          ...this.state.members,
+          [name]: e.target.value,
+        },
+      })
+    }
+
+    const renderRunnerType = () => {
+      const { age } = this.state.members
+      return this.state.runnerType.filter(type => type.age.min <= age && type.age.max >= age ).map(type => (
+        <Tooltip key={type.name} title={`ค่าสมัคร ${type.fee} บาท`}><RadioButton value={type.name}><strong>{type.name}</strong> ({type.fee} บาท)</RadioButton></Tooltip>
+      ))
+    }
+
+    const renderRunnerDistance = () => {
+      const distanceByRunnerType = this.state.runnerType.filter(type => type.name === this.state.members.type)
+
+      return distanceByRunnerType[0].distance.map(distance => (
+        <Tooltip key={distance} title={`ระยะทาง ${distance} กิโลเมตร`}><RadioButton value={distance}>{distance} กิโลเมตร</RadioButton></Tooltip>
+      ))
+    }
+
+    const renderRunnerGen = () => {
+      if (this.state.members.age === undefined) {
+        return null
+      }
+
+      const runnerGeneration = this.state.runnerGen.filter(gen => gen.min <= this.state.members.age && gen.max >= this.state.members.age)
+
+      const student10K = 'อายุไม่เกิน 19 ปี'
+      let division = runnerGeneration[0].title
+
+      if (this.state.members.distance === 10 && this.state.members.type === 'นักเรียน รับเสื้อ') {
+        division = student10K
+      }
+
+      return `จัดอยู่ในรุ่น${division}`
+    }
+    const { age } = this.state.members
+    return (
+      age ?
+        <FormItem {...formItemLayout}>
+          <Col {...colTwiceLayout} style={{ paddingBottom: '30px', overflow: 'scroll' }}>
+            <FormItem label="ประเภท">
+              {getFieldDecorator('mtype', {
+                rules: [{ required: true, message: 'กรุณาระบุประเภท' }],
+                onChange: e => changeCheckButton(e, 'type'),
+                initialValue: this.state.members.type,
+              })(
+                <RadioGroup style={{ float: 'left' }}>
+                  {renderRunnerType()}
+                </RadioGroup>)}
+            </FormItem>
+            {this.state.members.type ?
+              <FormItem label="ระยะทาง">
+                {getFieldDecorator('mdistance', {
+                  rules: [{ required: true, message: 'กรุณาระบุระยะทาง' }],
+                  onChange: e => changeCheckButton(e, 'distance'),
+                  initialValue: this.state.members.distance,
+                })(
+                  <RadioGroup style={{ float: 'left' }}>
+                    {renderRunnerDistance(this.state.members.type)}
+                  </RadioGroup>)}
+                &nbsp;<strong style={{ display: 'block' }}>({renderRunnerGen()})</strong>
+              </FormItem> : null
+            }
+          </Col>
+          <Col span={2}>
+            <span style={{ display: 'inline-block', width: '100%', textAlign: 'center' }}>
+              &nbsp;
+            </span>
+          </Col>
+          <Col {...colTwiceLayout} style={{ float: 'left', paddingBottom: '30px', overflow: 'scroll' }}>
+            {
+              this.state.members.type !== 'นักเรียน' ?
+                <FormItem label="ขนาดเสื้อ">
+                  {getFieldDecorator('size', {
+                    rules: [{ required: true, message: 'กรุณาระบุขนาดเสื้อ' }],
+                    onChange: e => changeCheckButton(e, 'size'),
+                    initialValue: this.state.members.size,
+                  })(
+                    <RadioGroup style={{ float: 'left' }}>
+                      <Tooltip title={`รอบอก 34"`}><RadioButton value="SS"><strong>SS</strong> (34")</RadioButton></Tooltip>
+                      <Tooltip title={`รอบอก 36"`}><RadioButton value="S"><strong>S</strong> (36")</RadioButton></Tooltip>
+                      <Tooltip title={`รอบอก 38"`}><RadioButton value="M"><strong>M</strong> (38")</RadioButton></Tooltip>
+                      <Tooltip title={`รอบอก 40"`}><RadioButton value="L"><strong>L</strong> (40")</RadioButton></Tooltip>
+                      <Tooltip title={`รอบอก 42"`}><RadioButton value="XL"><strong>XL</strong> (42")</RadioButton></Tooltip>
+                      <Tooltip title={`รอบอก 44"`}><RadioButton value="2XL"><strong>2XL</strong> (44")</RadioButton></Tooltip>
+                      <Tooltip title={`รอบอก 46"`}><RadioButton value="3XL"><strong>3XL</strong> (46")</RadioButton></Tooltip>
+                    </RadioGroup>)}
+                </FormItem> : null
+            }
+          </Col>
+        </FormItem> : null
+    )
+  }
+
   renderSelectRunnerType(type) {
     const { getFieldDecorator } = this.props.form
 
@@ -515,9 +641,33 @@ class RunnerClass extends Component {
               <RadioGroup style={{ float: 'left' }}>
                 {this.renderRunnerDistance()}
               </RadioGroup>)}
+            &nbsp;<strong style={{ marginTop: '15px', display: 'block' }}>({this.renderRunnerGen()})</strong>
           </FormItem> : null
         }
       </div>
+    )
+  }
+
+  renderShirtSize = () => {
+    const { getFieldDecorator } = this.props.form
+
+    return (
+      <FormItem label="ขนาดเสื้อ">
+        {getFieldDecorator('size', {
+          rules: [{ required: true, message: 'กรุณาระบุขนาดเสื้อ' }],
+          onChange: e => this.changeCheckButton(e, 'size'),
+          initialValue: props.size.value,
+        })(
+          <RadioGroup style={{ float: 'left' }}>
+            <Tooltip title={`รอบอก 34"`}><RadioButton value="SS"><strong>SS</strong> (34")</RadioButton></Tooltip>
+            <Tooltip title={`รอบอก 36"`}><RadioButton value="S"><strong>S</strong> (36")</RadioButton></Tooltip>
+            <Tooltip title={`รอบอก 38"`}><RadioButton value="M"><strong>M</strong> (38")</RadioButton></Tooltip>
+            <Tooltip title={`รอบอก 40"`}><RadioButton value="L"><strong>L</strong> (40")</RadioButton></Tooltip>
+            <Tooltip title={`รอบอก 42"`}><RadioButton value="XL"><strong>XL</strong> (42")</RadioButton></Tooltip>
+            <Tooltip title={`รอบอก 44"`}><RadioButton value="2XL"><strong>2XL</strong> (44")</RadioButton></Tooltip>
+            <Tooltip title={`รอบอก 46"`}><RadioButton value="3XL"><strong>3XL</strong> (46")</RadioButton></Tooltip>
+          </RadioGroup>)}
+      </FormItem>
     )
   }
 
@@ -534,10 +684,6 @@ class RunnerClass extends Component {
       <Row gutter={16}>
         <Col {...colLayout}>
           {this.renderSelectRunnerType(props.type.value)}
-
-          <FormItem {...formItemLayout}>
-          <strong className="ant-form-item-required">({this.renderRunnerGen()})</strong>
-          </FormItem>
           <FormItem {...formItemLayout} label="ชื่อทีม (ถ้ามี)">
             {getFieldDecorator('team', {
               rules: [{ required: false, message: 'กรุณาระบุชื่อทีม (ถ้ามี)' }],
@@ -556,6 +702,10 @@ class RunnerClass extends Component {
   }
 }
 
+const mapStateToProps = state => ({
+  state,
+})
+
 const mapDispatchToProps = dispatch => ({
   inputChange: bindActionCreators(inputChange, dispatch),
   inputChangeMember: bindActionCreators(inputChangeMember, dispatch),
@@ -564,4 +714,4 @@ const mapDispatchToProps = dispatch => ({
 export default Form.create({
   onFieldsChange(props, changedFields) {
     props.onChange(changedFields)
-  }})(connect(null, mapDispatchToProps)(RunnerClass))
+  }})(connect(mapStateToProps, mapDispatchToProps)(RunnerClass))
