@@ -44,7 +44,7 @@ class Admission extends Component {
             <div style={{ background: '#fff', padding: 24, minHeight: 280 }}>
               <Runner data={this.props.data} />
             </div>
-            {/*<DisplayForm />*/}
+            <DisplayForm />
           </Content>
           <Footer style={{ textAlign: 'center' }}>Runner ©2018 Created by NextSchool</Footer>
         </Layout>
