@@ -11,14 +11,22 @@ export default (state = {}, action) => {
         },
       }
     case INPUT_MEMBER: {
-      const index = this.state.items.findIndex(x => x.id === action.index)
+      if (action.index) {
+        // const index = state.items.findIndex(x => x.id === action.index)
+        return {
+          ...state,
+          members: [
+            // ...state.items.slice(0, action.index),
+            ...state.members,
+            Object.assign({}, action.index, action.members),
+            // ...state.items.slice(action.index + 1),
+          ],
+        }
+      }
+
       return {
         ...state,
-        members: [
-          ...this.state.items.slice(0, index),
-          Object.assign({}, this.state.items[index], action.members),
-          ...this.state.items.slice(index + 1),
-        ],
+        members: [action.members],
       }
     }
     default:

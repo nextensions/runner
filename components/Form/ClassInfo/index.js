@@ -112,7 +112,7 @@ class RunnerTypeInfo extends Component {
           }
         </Row>
         {
-          members.length ? (
+          (members !== undefined && members.length) ? (
             <Row gutter={16}>
               <Col {...cardLayoutFull} style={{ marginTop: '15px' }}>
                 <Card title={cardTitle('2.3', 'สมาชิกเพิ่มเติม')} bordered={false}>

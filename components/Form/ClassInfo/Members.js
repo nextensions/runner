@@ -198,10 +198,12 @@ class Members extends Component {
     const { state } = this
     const { members } = this.props.state.data
 
+    const membersData = members.map((member, index) => ({ ...member, key: index }))
+
     const columns = [{
       title: 'ชื่อ',
       dataIndex: 'firstname',
-      key: 'firstname',
+      key: 'name',
     }, {
       title: 'นามสกุล',
       dataIndex: 'lastname',
@@ -210,6 +212,13 @@ class Members extends Component {
       title: 'อายุ',
       dataIndex: 'age',
       key: 'age',
+      render: (value, row, index) => {
+        const obj = {
+          children: value + ' ปี',
+          props: {},
+        }
+        return obj
+      },
     }, {
       title: 'ประเภท',
       dataIndex: 'type',
@@ -218,16 +227,30 @@ class Members extends Component {
       title: 'ระยะทาง',
       dataIndex: 'distance',
       key: 'distance',
+      render: (value, row, index) => {
+        const obj = {
+          children: value + ' กิโลเมตร',
+          props: {},
+        }
+        return obj
+      },
     }, {
       title: 'ขนาดเสื้อ',
       dataIndex: 'size',
       key: 'size',
+      render: (value, row, index) => {
+        const obj = {
+          children: value || '-',
+          props: {},
+        }
+        return obj
+      },
     }]
 
     return (
       <Row gutter={16}>
         <Col {...colLayout}>
-          <Table dataSource={members} columns={columns} size="small" pagination={false} />
+          <Table dataSource={membersData} columns={columns} size="small" pagination={false} />
         </Col>
       </Row>
     )

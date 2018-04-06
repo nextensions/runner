@@ -166,11 +166,20 @@ class Shipping extends Component {
     inputChange('info', name, e.target.value)
 
     const { data } = this.props.state
+    const { members } = data
     const runningFee = runnerType.filter(type => type.name === data.info.type)[0]
     const shippingFee = e.target.value !== 'pickup' ? 65 : 0
+    const membersShippingFee = members !== undefined ? members.reduce((fee, member) => {
+      const memberShipFee = (e.target.value !== 'pickup' && member.type !== 'นักเรียน') ? 30 : 0
+      return fee + memberShipFee
+    }, 0) : 0
 
-    inputChange('payment', 'fee', shippingFee)
-    inputChange('payment', 'amount', runningFee.fee)
+    const membersRunningFee = members !== undefined ? members.reduce((fee, member) => {
+      return fee + parseInt(runnerType.filter(type => type.name === member.type)[0].fee, 10)
+    }, 0) : 0
+
+    inputChange('payment', 'fee', shippingFee + membersShippingFee)
+    inputChange('payment', 'amount', runningFee.fee + membersRunningFee)
   }
 
   render() {
@@ -200,7 +209,7 @@ class Shipping extends Component {
                     <Radio style={radioStyle} value="post">
                       <strong>ไปรษณีย์</strong><br />
                       <em style={{ marginLeft: '20px' }}>
-                        ค่าจัดส่ง 65 บาท
+                        ค่าจัดส่ง ตัวแรก 65 บาท ตัวต่อไป ตัวละ 30 บาท
                       </em>
                     </Radio> : null
                 }

@@ -151,13 +151,15 @@ class RunnerClass extends Component {
     if (firstname !== undefined && lastname !== undefined && citizen !== undefined && dob !== undefined && age !== undefined && gender !== undefined && distance !== undefined && type !== undefined) {
       if ( type !== 'นักเรียน' ) {
         if ( size !== undefined ) {
-          const memberIndex = this.props.state.data.members.length
+          const { members } = this.props.state.data
+          const memberIndex = members !== undefined ? members.length : 0
           const { inputChangeMember } = this.props
           inputChangeMember('members', memberIndex, this.state.members)
 
           setTimeout(() => {
             this.setState({ loading: false, visible: false })
-          }, 3000)
+            this.setState({ members: { firstname: '' } })
+          }, 500)
         } else {
           message.warning('กรุณากรอกข้อมูลให้ครบถ้วน')
           this.setState({ loading: false })
@@ -169,7 +171,8 @@ class RunnerClass extends Component {
 
         setTimeout(() => {
           this.setState({ loading: false, visible: false })
-        }, 3000)
+          this.setState({ members: { firstname: '' } })
+        }, 500)
       }
     } else {
       message.warning('กรุณากรอกข้อมูลให้ครบถ้วน')
@@ -245,7 +248,7 @@ class RunnerClass extends Component {
   }
 
   renderAdditionalMember() {
-    const memberNo = 'member_0_'
+
     const { getFieldDecorator } = this.props.form
 
     const colForthLayout = {
@@ -507,7 +510,7 @@ class RunnerClass extends Component {
 
   renderMoreMembers() {
     const { visible, loading } = this.state
-
+    const additionalMember = () => this.renderAdditionalMember()
     return (
       <Modal
         visible={visible}
@@ -523,7 +526,7 @@ class RunnerClass extends Component {
           </Button>,
         ]}
       >
-        {this.renderAdditionalMember()}
+        {additionalMember()}
       </Modal>
     )
   }
