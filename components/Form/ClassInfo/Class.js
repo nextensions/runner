@@ -148,15 +148,29 @@ class RunnerClass extends Component {
 
     // console.log(this.props.state.data.members.length)
 
-    if (firstname !== undefined && lastname !== undefined && citizen !== undefined && dob !== undefined && age !== undefined && gender !== undefined && distance !== undefined && type !== undefined && size !== undefined) {
-      // console.log(this.state.members)
-      const memberIndex = this.props.state.data.members.length
-      const { inputChangeMember } = this.props
-      inputChangeMember('members', memberIndex, this.state.members)
+    if (firstname !== undefined && lastname !== undefined && citizen !== undefined && dob !== undefined && age !== undefined && gender !== undefined && distance !== undefined && type !== undefined) {
+      if ( type !== 'นักเรียน' ) {
+        if ( size !== undefined ) {
+          const memberIndex = this.props.state.data.members.length
+          const { inputChangeMember } = this.props
+          inputChangeMember('members', memberIndex, this.state.members)
 
-      setTimeout(() => {
-        this.setState({ loading: false, visible: false })
-      }, 3000)
+          setTimeout(() => {
+            this.setState({ loading: false, visible: false })
+          }, 3000)
+        } else {
+          message.warning('กรุณากรอกข้อมูลให้ครบถ้วน')
+          this.setState({ loading: false })
+        }
+      } else {
+        const memberIndex = this.props.state.data.members.length
+        const { inputChangeMember } = this.props
+        inputChangeMember('members', memberIndex, this.state.members)
+
+        setTimeout(() => {
+          this.setState({ loading: false, visible: false })
+        }, 3000)
+      }
     } else {
       message.warning('กรุณากรอกข้อมูลให้ครบถ้วน')
       this.setState({ loading: false })

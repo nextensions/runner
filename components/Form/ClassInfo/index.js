@@ -92,7 +92,7 @@ class RunnerTypeInfo extends Component {
   }
   render() {
     const { fields } = this.state
-    const { info } = this.props.state.data
+    const { info, members } = this.props.state.data
 
     return (
       <Form layout="vertical" onSubmit={this.handleSubmit}>
@@ -111,13 +111,17 @@ class RunnerTypeInfo extends Component {
               </Col> : null
           }
         </Row>
-        <Row gutter={16}>
-          <Col {...cardLayoutFull} style={{ marginTop: '15px' }}>
-            <Card title={cardTitle('2.3', 'สมาชิกเพิ่มเติม')} bordered={false}>
-              <Members {...fields} onChange={this.handleFormChange} age={info.age} />
-            </Card>
-          </Col>
-        </Row>
+        {
+          members.length ? (
+            <Row gutter={16}>
+              <Col {...cardLayoutFull} style={{ marginTop: '15px' }}>
+                <Card title={cardTitle('2.3', 'สมาชิกเพิ่มเติม')} bordered={false}>
+                  <Members {...fields} onChange={this.handleFormChange} age={info.age} />
+                </Card>
+              </Col>
+            </Row>
+          ) : null
+        }
       </Form>
     )
   }

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Form, Input, Row, Col, Radio, Divider, Tooltip } from 'antd'
+import { Form, Input, Row, Col, Radio, Divider, Tooltip, Table } from 'antd'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
@@ -105,10 +105,19 @@ const colForthTailLayout = {
 
 
 class Members extends Component {
+  static async getInitialProps({
+    store, isServer, pathname, query,
+  }) {
+    const data = await store.getState().data
+    return { data }
+  }
 
   constructor(props) {
     super(props)
     this.inputChangeFunc = this.inputChangeFunc.bind(this)
+  }
+  componentWillMount() {
+    const { data } = this.props
   }
 
   state = {
@@ -187,68 +196,47 @@ class Members extends Component {
     const { getFieldDecorator } = this.props.form
     const { props } = this
     const { state } = this
+    const { members } = this.props.state.data
+
+    const columns = [{
+      title: 'ชื่อ',
+      dataIndex: 'firstname',
+      key: 'firstname',
+    }, {
+      title: 'นามสกุล',
+      dataIndex: 'lastname',
+      key: 'lastname',
+    }, {
+      title: 'อายุ',
+      dataIndex: 'age',
+      key: 'age',
+    }, {
+      title: 'ประเภท',
+      dataIndex: 'type',
+      key: 'type',
+    }, {
+      title: 'ระยะทาง',
+      dataIndex: 'distance',
+      key: 'distance',
+    }, {
+      title: 'ขนาดเสื้อ',
+      dataIndex: 'size',
+      key: 'size',
+    }]
 
     return (
       <Row gutter={16}>
         <Col {...colLayout}>
-          <FormItem {...formItemLayout}>
-            <Col {...colForthTailLayout} style={{ marginBottom: '16px' }}>
-              <FormItem {...formItemLayout} label="ชื่อ">
-                {getFieldDecorator('firstname', {
-                  rules: [{ required: true, message: 'กรุณาระบุชื่อ' }],
-                  onChange: this.inputChangeFunc,
-                  // initialValue: props.members[0].firstname.value,
-                })(<Input title="info" placeholder="ชื่อ" maxLength="255" />)}
-              </FormItem>
-            </Col>
-            <Col span={1}>
-              <span style={{ display: 'inline-block', width: '100%', textAlign: 'center' }}>
-                  &nbsp;
-              </span>
-            </Col>
-            <Col {...colForthLayout} style={{ marginBottom: '16px' }}>
-              <FormItem {...formItemLayout} label="นามสกุล">
-                {getFieldDecorator('lastname', {
-                  rules: [{ required: true, message: 'กรุณาระบุนามสกุล' }],
-                  onChange: this.inputChangeFunc,
-                  // initialValue: props.members[0].lastname.value,
-                })(<Input title="info" placeholder="นามสกุล" maxLength="255" />)}
-              </FormItem>
-            </Col>
-            <Col span={1}>
-              <span style={{ display: 'inline-block', width: '100%', textAlign: 'center' }}>
-                  &nbsp;
-              </span>
-            </Col>
-            <Col {...colForthLayout} style={{ marginBottom: '16px' }}>
-              <FormItem {...formItemLayout} label="หมายเลขบัตรประชาชน">
-                {getFieldDecorator('citizen', {
-                  rules: [{ required: true, message: 'กรุณาระบุหมายเลขบัตรประชาชน' }],
-                  onChange: this.inputChangeFunc,
-                  // initialValue: props.members[0].lastname.value,
-                })(<Input title="info" placeholder="นามสกุล" maxLength="255" />)}
-              </FormItem>
-            </Col>
-            <Col span={1}>
-              <span style={{ display: 'inline-block', width: '100%', textAlign: 'center' }}>
-                  &nbsp;
-              </span>
-            </Col>
-            <Col {...colForthLayout} style={{ marginBottom: '16px' }}>
-              <FormItem {...formItemLayout} label="นามสกุล">
-                {getFieldDecorator('citizen', {
-                  rules: [{ required: true, message: 'กรุณาระบุนามสกุล' }],
-                  onChange: this.inputChangeFunc,
-                  // initialValue: props.members[0].lastname.value,
-                })(<Input title="info" placeholder="นามสกุล" maxLength="255" />)}
-              </FormItem>
-            </Col>
-          </FormItem>
+          <Table dataSource={members} columns={columns} size="small" pagination={false} />
         </Col>
       </Row>
     )
   }
 }
+
+const mapStateToProps = state => ({
+  state,
+})
 
 const mapDispatchToProps = dispatch => ({
   inputChange: bindActionCreators(inputChange, dispatch),
@@ -257,4 +245,4 @@ const mapDispatchToProps = dispatch => ({
 export default Form.create({
   onFieldsChange(props, changedFields) {
     props.onChange(changedFields)
-  }})(connect(null, mapDispatchToProps)(Members))
+  }})(connect(mapStateToProps, mapDispatchToProps)(Members))
