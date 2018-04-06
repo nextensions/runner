@@ -165,7 +165,8 @@ class RunnerClass extends Component {
           this.setState({ loading: false })
         }
       } else {
-        const memberIndex = this.props.state.data.members.length
+        const { members } = this.props.state.data
+        const memberIndex = members !== undefined ? members.length : 0
         const { inputChangeMember } = this.props
         inputChangeMember('members', memberIndex, this.state.members)
 
