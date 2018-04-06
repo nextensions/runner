@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Form, Input, Row, Col, Radio, Divider, Tooltip, Select } from 'antd'
+import { Form, Input, Row, Col, Radio, Divider, Tooltip } from 'antd'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
@@ -11,7 +11,6 @@ require('moment/locale/th')
 const FormItem = Form.Item
 const RadioButton = Radio.Button
 const RadioGroup = Radio.Group
-const Option = Select.Option
 
 const formItemLayout = {
   labelCol: {
@@ -87,8 +86,25 @@ const colTrippleTailLayout = {
   xl: { span: 8 },
 }
 
+const colForthLayout = {
+  xs: { span: 24 },
+  sm: { span: 24 },
+  md: { span: 5 },
+  lg: { span: 5 },
+  xl: { span: 5 },
+}
 
-class RunnerClass extends Component {
+const colForthTailLayout = {
+  xs: { span: 24 },
+  sm: { span: 24 },
+  md: { span: 6 },
+  lg: { span: 6 },
+  xl: { span: 6 },
+}
+
+
+
+class Members extends Component {
 
   constructor(props) {
     super(props)
@@ -138,12 +154,6 @@ class RunnerClass extends Component {
     inputChange('info', name, e.target.value)
   }
 
-  changeMembers = (value) => {
-    this.setState({ ...this.state, member: value })
-    const { inputChange } = this.props
-    inputChange('info', 'member', value)
-  }
-
   renderRunnerType() {
     return this.state.runnerType.filter(type => type.age.min <= this.props.age && type.age.max >= this.props.age ).map(type => (
       <Tooltip key={type.name} title={`ค่าสมัคร ${type.fee} บาท`}><RadioButton value={type.name}><strong>{type.name}</strong> ({type.fee} บาท)</RadioButton></Tooltip>
@@ -168,6 +178,7 @@ class RunnerClass extends Component {
       division = student10K
     }
 
+
     return `จัดอยู่ในรุ่น${division}`
   }
 
@@ -177,57 +188,61 @@ class RunnerClass extends Component {
     const { props } = this
     const { state } = this
 
-    const memberOptions = [...Array(9).keys()].map(member => <Option key={member+2} value={member+2}>สมัครเพิ่มอีก {member+1} คน</Option>)
-
     return (
       <Row gutter={16}>
         <Col {...colLayout}>
-          <FormItem label="ประเภท">
-            {getFieldDecorator('type', {
-              rules: [{ required: true, message: 'กรุณาระบุประเภท' }],
-              onChange: e => this.changeCheckButton(e, 'type'),
-              initialValue: props.type.value,
-            })(
-              <RadioGroup style={{ float: 'left' }}>
-                {this.renderRunnerType()}
-              </RadioGroup>)}
-          </FormItem>
-          {this.props.type.value ?
-            <FormItem label="ระยะทาง">
-              {getFieldDecorator('distance', {
-                rules: [{ required: true, message: 'กรุณาระบุระยะทาง' }],
-                onChange: e => this.changeCheckButton(e, 'distance'),
-                initialValue: props.distance.value,
-              })(
-                <RadioGroup style={{ float: 'left' }}>
-                  {this.renderRunnerDistance()}
-                </RadioGroup>)}
-            </FormItem> : null
-          }
           <FormItem {...formItemLayout}>
-          <strong className="ant-form-item-required">({this.renderRunnerGen()})</strong>
-          </FormItem>
-          <FormItem {...formItemLayout} label="ชื่อทีม (ถ้ามี)">
-            {getFieldDecorator('team', {
-              rules: [{ required: false, message: 'กรุณาระบุชื่อทีม (ถ้ามี)' }],
-              onChange: this.inputChangeFunc,
-              initialValue: props.team.value,
-            })(<Input title="info" placeholder="ชื่อทีม" maxLength="255" />)}
-          </FormItem>
-          <FormItem {...formItemLayout} label="สมัครนักวิ่งเพิ่ม (คนที่ 2-10)">
-            {getFieldDecorator('member', {
-              rules: [{ required: false, message: 'กรุณาระบุเดือนเกิด' }],
-              onChange: this.changeMembers,
-              initialValue: props.member.value,
-            })(<Select
-              placeholder="Select a person"
-              optionFilterProp="children"
-              onChange={this.handleChange}
-              filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-            >
-              <Option key={0} value={0}>วิ่งคนเดียว</Option>
-              {memberOptions}
-            </Select>)}
+            <Col {...colForthTailLayout} style={{ marginBottom: '16px' }}>
+              <FormItem {...formItemLayout} label="ชื่อ">
+                {getFieldDecorator('firstname', {
+                  rules: [{ required: true, message: 'กรุณาระบุชื่อ' }],
+                  onChange: this.inputChangeFunc,
+                  // initialValue: props.members[0].firstname.value,
+                })(<Input title="info" placeholder="ชื่อ" maxLength="255" />)}
+              </FormItem>
+            </Col>
+            <Col span={1}>
+              <span style={{ display: 'inline-block', width: '100%', textAlign: 'center' }}>
+                  &nbsp;
+              </span>
+            </Col>
+            <Col {...colForthLayout} style={{ marginBottom: '16px' }}>
+              <FormItem {...formItemLayout} label="นามสกุล">
+                {getFieldDecorator('lastname', {
+                  rules: [{ required: true, message: 'กรุณาระบุนามสกุล' }],
+                  onChange: this.inputChangeFunc,
+                  // initialValue: props.members[0].lastname.value,
+                })(<Input title="info" placeholder="นามสกุล" maxLength="255" />)}
+              </FormItem>
+            </Col>
+            <Col span={1}>
+              <span style={{ display: 'inline-block', width: '100%', textAlign: 'center' }}>
+                  &nbsp;
+              </span>
+            </Col>
+            <Col {...colForthLayout} style={{ marginBottom: '16px' }}>
+              <FormItem {...formItemLayout} label="หมายเลขบัตรประชาชน">
+                {getFieldDecorator('citizen', {
+                  rules: [{ required: true, message: 'กรุณาระบุหมายเลขบัตรประชาชน' }],
+                  onChange: this.inputChangeFunc,
+                  // initialValue: props.members[0].lastname.value,
+                })(<Input title="info" placeholder="นามสกุล" maxLength="255" />)}
+              </FormItem>
+            </Col>
+            <Col span={1}>
+              <span style={{ display: 'inline-block', width: '100%', textAlign: 'center' }}>
+                  &nbsp;
+              </span>
+            </Col>
+            <Col {...colForthLayout} style={{ marginBottom: '16px' }}>
+              <FormItem {...formItemLayout} label="นามสกุล">
+                {getFieldDecorator('citizen', {
+                  rules: [{ required: true, message: 'กรุณาระบุนามสกุล' }],
+                  onChange: this.inputChangeFunc,
+                  // initialValue: props.members[0].lastname.value,
+                })(<Input title="info" placeholder="นามสกุล" maxLength="255" />)}
+              </FormItem>
+            </Col>
           </FormItem>
         </Col>
       </Row>
@@ -242,4 +257,4 @@ const mapDispatchToProps = dispatch => ({
 export default Form.create({
   onFieldsChange(props, changedFields) {
     props.onChange(changedFields)
-  }})(connect(null, mapDispatchToProps)(RunnerClass))
+  }})(connect(null, mapDispatchToProps)(Members))
