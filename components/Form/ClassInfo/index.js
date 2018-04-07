@@ -105,7 +105,7 @@ class RunnerTypeInfo extends Component {
           {
             info.type !== 'นักเรียน' ?
               <Col {...cardLayout}>
-                <Card title={cardTitle('2.2', 'ขนาดเสื้อที่ต้องการ')} bordered={false}>
+                <Card title={cardTitle('2.2', 'ตัวอย่างแบบเสื้อ')} bordered={false}>
                   <Shirt {...fields} onChange={this.handleFormChange} />
                 </Card>
               </Col> : null

@@ -21,13 +21,13 @@ module.exports = {
     return config
   },
 
-  webpack(cfg) {
-    cfg.plugins = cfg.plugins.filter(plugin => plugin.constructor.name !== 'UglifyJsPlugin')
+  // webpack(cfg) {
+  //   cfg.plugins = cfg.plugins.filter(plugin => plugin.constructor.name !== 'UglifyJsPlugin')
 
-    cfg.plugins.push(new Uglify({
-      parallel: true,
-      sourceMap: true,
-    }))
-    return cfg
-  },
+  //   cfg.plugins.push(new Uglify({
+  //     parallel: true,
+  //     sourceMap: true,
+  //   }))
+  //   return cfg
+  // },
 }

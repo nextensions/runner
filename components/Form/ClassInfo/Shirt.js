@@ -71,12 +71,13 @@ class Shirt extends Component {
   }
 
   modalShirt = () => {
-    const shirtStyle = this.props.type.value === 'vip' ? 'static/images/shirtvip.png' : 'static/images/shirt.png'
+    const shirtStyle =
+      this.props.type.value === 'vip' ? 'static/images/shirtvip.png' : 'static/images/shirt.png'
     const modal = Modal.success({
       width: '70%',
       style: { top: 20 },
       title: 'ตัวอย่างแบบเสื้อ',
-      content: (<img alt="แบบเสื้อ" src={shirtStyle} style={{ width: '100%' }} />),
+      content: <img alt="แบบเสื้อ" src={shirtStyle} style={{ width: '100%' }} />,
     })
   }
 
@@ -85,12 +86,18 @@ class Shirt extends Component {
     const { props } = this
     const { state } = this
 
-    const shirtStyle = props.type.value === 'vip' ? 'static/images/shirtvip.png' : 'static/images/shirt.png'
+    const shirtStyle =
+      props.type.value === 'vip' ? 'static/images/shirtvip.png' : 'static/images/shirt.png'
     return (
       <Row gutter={16} justify="center" type="flex">
         <Col {...colLayout}>
-          <img alt="แบบเสื้อ" src={shirtStyle} style={{ width: '100%' }} onClick={this.modalShirt} />
-          <FormItem label="ขนาดเสื้อ">
+          <img
+            alt="แบบเสื้อ"
+            src={shirtStyle}
+            style={{ width: '100%' }}
+            onClick={this.modalShirt}
+          />
+          {/* <FormItem label="ขนาดเสื้อ">
             {getFieldDecorator('size', {
               rules: [{ required: true, message: 'กรุณาระบุขนาดเสื้อ' }],
               onChange: e => this.changeCheckButton(e, 'size'),
@@ -105,7 +112,7 @@ class Shirt extends Component {
                 <Tooltip title={`รอบอก 44"`}><RadioButton value="2XL"><strong>2XL</strong> (44")</RadioButton></Tooltip>
                 <Tooltip title={`รอบอก 46"`}><RadioButton value="3XL"><strong>3XL</strong> (46")</RadioButton></Tooltip>
               </RadioGroup>)}
-          </FormItem>
+            </FormItem> */}
         </Col>
       </Row>
     )
@@ -119,4 +126,5 @@ const mapDispatchToProps = dispatch => ({
 export default Form.create({
   onFieldsChange(props, changedFields) {
     props.onChange(changedFields)
-  }})(connect(null, mapDispatchToProps)(Shirt))
+  },
+})(connect(null, mapDispatchToProps)(Shirt))

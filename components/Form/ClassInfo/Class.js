@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Form, Input, Row, Col, Radio, Divider, Tooltip, Select, Modal, Button, InputNumber, message } from 'antd'
+import { Form, Input, Row, Col, Radio, Divider, Tooltip, Select, Modal, Button, InputNumber, message, Card } from 'antd'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import moment from 'moment'
@@ -13,6 +13,27 @@ const FormItem = Form.Item
 const RadioButton = Radio.Button
 const RadioGroup = Radio.Group
 const Option = Select.Option
+
+
+const cardTitle = (step, title) => (
+  <div className="ant-steps-item ant-steps-item-process">
+    <div className="ant-steps-item-tail" />
+    <div className="ant-steps-item-icon">
+      <span className="ant-steps-icon">{step}</span>
+    </div>
+    <div className="ant-steps-item-content">
+      <div className="ant-steps-item-title">{title}</div>
+    </div>
+  </div>
+)
+
+const cardLayout = {
+  xs: { span: 24 },
+  sm: { span: 24 },
+  md: { span: 12 },
+  lg: { span: 12 },
+  xl: { span: 12 },
+}
 
 const formItemLayout = {
   labelCol: {
@@ -136,9 +157,14 @@ class RunnerClass extends Component {
   }
 
   showModal = () => {
+    // this.clearModal()
     this.setState({
       visible: true,
     })
+  }
+
+  clearModal = () => {
+    document.getElementById('firstname').reset()
   }
   handleOk = () => {
     this.setState({ loading: true })
@@ -340,6 +366,8 @@ class RunnerClass extends Component {
       firstname, lastname, citizen, date, month, year, dob, age, gender,
     } = this.state.members
 
+    this.props.form.resetFields()
+
     return (
       <Row gutter={16}>
         <Col {...colLayout}>
@@ -352,7 +380,7 @@ class RunnerClass extends Component {
                       rules: [{ required: true, message: 'กรุณาระบุชื่อ' }],
                       onChange: inputChangeFunc,
                       initialValue: firstname,
-                    })(<Input title="info" placeholder="ชื่อ" maxLength="255" />)}
+                    })(<Input title="info" placeholder="ชื่อ" maxLength="255" ref={(child) => { this.child = child }} />)}
                   </FormItem>
                 </Col>
                 <Col span={1}>
@@ -613,10 +641,10 @@ class RunnerClass extends Component {
             {
               this.state.members.type !== 'นักเรียน' ?
                 <FormItem label="ขนาดเสื้อ">
-                  {getFieldDecorator('size', {
+                  {getFieldDecorator('msize', {
                     rules: [{ required: true, message: 'กรุณาระบุขนาดเสื้อ' }],
                     onChange: e => changeCheckButton(e, 'size'),
-                    initialValue: this.state.members.size,
+                    // initialValue: this.state.members.size,
                   })(
                     <RadioGroup style={{ float: 'left' }}>
                       <Tooltip title={`รอบอก 34"`}><RadioButton value="SS"><strong>SS</strong> (34")</RadioButton></Tooltip>
@@ -674,7 +702,7 @@ class RunnerClass extends Component {
         {getFieldDecorator('size', {
           rules: [{ required: true, message: 'กรุณาระบุขนาดเสื้อ' }],
           onChange: e => this.changeCheckButton(e, 'size'),
-          initialValue: props.size.value,
+          initialValue: this.props.size.value,
         })(
           <RadioGroup style={{ float: 'left' }}>
             <Tooltip title={`รอบอก 34"`}><RadioButton value="SS"><strong>SS</strong> (34")</RadioButton></Tooltip>
@@ -689,11 +717,11 @@ class RunnerClass extends Component {
     )
   }
 
-
   render() {
     const { getFieldDecorator } = this.props.form
     const { props } = this
     const { state } = this
+    const { data } = this.props.state
 
 
     const memberOptions = [...Array(9).keys()].map(member => <Option key={member+2} value={member+2}>สมัครเพิ่มอีก {member+1} คน</Option>)
@@ -709,6 +737,11 @@ class RunnerClass extends Component {
               initialValue: props.team.value,
             })(<Input title="info" placeholder="ชื่อทีม" maxLength="255" />)}
           </FormItem>
+
+          {
+            data.info.type !== 'นักเรียน' ? this.renderShirtSize() : null
+          }
+
 
           <Button type="primary" onClick={this.showModal}>
             สมัครนักวิ่งเพิ่ม (คนที่ 2-10)
