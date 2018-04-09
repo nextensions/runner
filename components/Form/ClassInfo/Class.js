@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Form, Input, Row, Col, Radio, Divider, Tooltip, Select, Modal, Button, InputNumber, message, Card } from 'antd'
+import { Form, Input, Row, Col, Radio, Divider, Tooltip, Select, Modal, Button, InputNumber, message, Card, notification } from 'antd'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import moment from 'moment'
@@ -145,6 +145,7 @@ class RunnerClass extends Component {
     loading: false,
     visible: false,
     members: {},
+    existingCitizen: false,
   }
 
   handleSubmit = (e) => {
@@ -157,22 +158,50 @@ class RunnerClass extends Component {
   }
 
   showModal = () => {
-    // this.clearModal()
     this.setState({
       visible: true,
     })
   }
 
-  clearModal = () => {
-    document.getElementById('firstname').reset()
+  existing = async (bodyProperty) => {
+    const res = await fetch(`${process.env.API_URL}/id-card`, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        Authorization: `Basic ${btoa(process.env.USERNAME + ':' + process.env.PASSWORD)}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        ...bodyProperty,
+      }),
+      // credentials: 'same-origin',
+    })
+      .then((response) => {
+        if (response.status >= 400) {
+          throw new Error('API Server Error')
+        }
+        if (response.status === 204) {
+          return {
+            status: 'options',
+          }
+        }
+        return response.json()
+      })
+      .then((data) => {
+        if (data.status === 'success') {
+          this.setState({ existingCitizen: data.existing })
+        }
+        return false
+      })
   }
-  handleOk = () => {
+
+  addMember = () => {
+
     this.setState({ loading: true })
+
     const {
       firstname, lastname, citizen, date, month, year, dob, age, gender, distance, type, size
     } = this.state.members
-
-    // console.log(this.props.state.data.members.length)
 
     if (firstname !== undefined && lastname !== undefined && citizen !== undefined && dob !== undefined && age !== undefined && gender !== undefined && distance !== undefined && type !== undefined) {
       if ( type !== 'นักเรียน' ) {
@@ -187,7 +216,10 @@ class RunnerClass extends Component {
             this.setState({ members: { firstname: '' } })
           }, 500)
         } else {
-          message.warning('กรุณากรอกข้อมูลให้ครบถ้วน')
+          notification.error({
+            message: 'ผิดพลาด',
+            description: 'กรุณากรอกข้อมูลให้ครบถ้วน',
+          })
           this.setState({ loading: false })
         }
       } else {
@@ -202,10 +234,43 @@ class RunnerClass extends Component {
         }, 500)
       }
     } else {
-      message.warning('กรุณากรอกข้อมูลให้ครบถ้วน')
+      notification.error({
+        message: 'ผิดพลาด',
+        description: 'กรุณากรอกข้อมูลให้ครบถ้วน',
+      })
       this.setState({ loading: false })
     }
-    // console.log(this.state)
+
+    this.props.form.resetFields()
+  }
+
+
+  handleOk = () => {
+
+    this.setState({ loading: true })
+
+    const citizenInfo = { citizen: this.state.members.citizen }
+    this.existing(citizenInfo)
+
+    setTimeout(() => {
+      if (this.state.existingCitizen) {
+        notification.error({
+          message: 'ผิดพลาด',
+          description: 'บัตรประชาชนซ้ำกับที่มีในระบบ',
+        })
+        this.setState({ loading: false })
+        return null
+      }
+      this.setState({ loading: false })
+    }, 1000)
+
+
+    setTimeout(() => {
+      if (!this.state.existingCitizen) {
+        this.addMember()
+      }
+    }, 1000)
+
   }
 
   handleCancel = () => {
@@ -365,8 +430,6 @@ class RunnerClass extends Component {
     const {
       firstname, lastname, citizen, date, month, year, dob, age, gender,
     } = this.state.members
-
-    this.props.form.resetFields()
 
     return (
       <Row gutter={16}>
@@ -644,7 +707,7 @@ class RunnerClass extends Component {
                   {getFieldDecorator('msize', {
                     rules: [{ required: true, message: 'กรุณาระบุขนาดเสื้อ' }],
                     onChange: e => changeCheckButton(e, 'size'),
-                    // initialValue: this.state.members.size,
+                    initialValue: this.state.members.size,
                   })(
                     <RadioGroup style={{ float: 'left' }}>
                       <Tooltip title={`รอบอก 34"`}><RadioButton value="SS"><strong>SS</strong> (34")</RadioButton></Tooltip>

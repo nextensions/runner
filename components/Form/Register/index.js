@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Steps, Button, message, Icon, Row, Col, Progress, Layout } from 'antd'
+import { Steps, Button, message, Icon, Row, Col, Progress, Layout, notification } from 'antd'
 import { connect } from 'react-redux'
 
 const axios = require('axios')
@@ -42,6 +42,7 @@ class RegisterForm extends Component {
       current: 0,
       finish: false,
       percent: 0,
+      existingCitizen: false,
     }
   }
   next() {
@@ -51,25 +52,48 @@ class RegisterForm extends Component {
 
     if (current === 1) {
       if (typeof info !== 'undefined') {
-        if (info.firstname && info.lastname && info.dob && info.age && info.gender && info.email && info.mobile && info.emer_person && info.emer_contact) {
-          this.setState({ current })
-          return
-        }
+        // check existing citizen
+        const citizenInfo = { citizen: info.citizen }
+        this.existing(citizenInfo)
+        setTimeout(() => {
+          if (this.state.existingCitizen) {
+            notification.error({
+              message: 'ผิดพลาด',
+              description: 'บัตรประชาชนซ้ำกับที่มีในระบบ',
+            })
+            return null
+          }
+          if (info.firstname && info.lastname && info.dob && info.age && info.gender && info.email && info.mobile && info.emer_person && info.emer_contact ) {
+            this.setState({ current })
+            return null
+          }
+          notification.error({
+            message: 'ผิดพลาด',
+            description: 'กรุณากรอกข้อมูลให้ครบถ้วน',
+          })
+        }, 1000)
+        return null
       }
-      message.warning('กรุณากรอกข้อมูลให้ครบถ้วน')
+      notification.error({
+        message: 'ผิดพลาด',
+        description: 'กรุณากรอกข้อมูลให้ครบถ้วน',
+      })
     } else if (current === 2) {
       if (typeof info !== 'undefined') {
         if (info.type && info.type !== 'นักเรียน') {
           if (info.distance && info.size) {
             this.setState({ current })
-            return
+            return null
           }
         } else if (info.distance) {
           this.setState({ current })
-          return
+          return null
         }
       }
-      message.warning('กรุณาระบุประเภท ระยะทาง และขนาดเสื้อ')
+      notification.warning({
+        message: 'ผิดพลาด',
+        description: 'กรุณาระบุประเภท ระยะทาง และขนาดเสื้อ',
+      })
     } else if (current === 3) {
       if (typeof info !== 'undefined') {
         if (info.shipmethod) {
@@ -77,19 +101,26 @@ class RegisterForm extends Component {
             const { address } = data
             if (typeof address !== 'undefined') {
               this.setState({ current })
-              return
+              return null
             } else {
-              message.warning('กรุณาระบุที่อยู่สำหรับจัดส่งเสื้อ และเบอร์ BIB')
-              return
+              notification.warning({
+                message: 'ผิดพลาด',
+                description: 'กรุณาระบุที่อยู่สำหรับจัดส่งเสื้อ และเบอร์ BIB',
+              })
+              return null
             }
           } else {
             this.setState({ current })
-            return
+            return null
           }
         }
       }
-      message.warning('กรุณาระบุวิธีจัดส่งเสื้อ และเบอร์ BIB')
+      notification.warning({
+        message: 'ผิดพลาด',
+        description: 'กรุณาระบุวิธีจัดส่งเสื้อ และเบอร์ BIB',
+      })
     }
+    return null
   }
   prev() {
     const current = this.state.current - 1
@@ -113,15 +144,50 @@ class RegisterForm extends Component {
           const membersInfo = members.map(member => ({ info: member }))
           registrantInfo = { data: [data, ...membersInfo] }
         }
-        console.log(registrantInfo)
         this.register(registrantInfo)
       } else {
-        message.warning('กรุณาแนบหลักฐานการชำระเงิน และยอมรับเงื่อนใข')
+        notification.error({
+          message: 'ผิดพลาด',
+          description: 'กรุณาแนบหลักฐานการชำระเงิน และยอมรับเงื่อนใข',
+        })
         return null
       }
     }
 
     return null
+  }
+
+  existing = async (bodyProperty) => {
+    const res = await fetch(`${process.env.API_URL}/id-card`, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        Authorization: `Basic ${btoa(process.env.USERNAME + ':' + process.env.PASSWORD)}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        ...bodyProperty,
+      }),
+      // credentials: 'same-origin',
+    })
+      .then((response) => {
+        if (response.status >= 400) {
+          throw new Error('API Server Error')
+        }
+        if (response.status === 204) {
+          return {
+            status: 'options',
+          }
+        }
+        return response.json()
+      })
+      .then((data) => {
+        if (data.status === 'success') {
+          console.log(data.existing)
+          this.setState({ existingCitizen: data.existing })
+        }
+        return false
+      })
   }
 
   register = async (bodyProperty) => {
