@@ -136,7 +136,7 @@ class RunnerClass extends Component {
       { min: 20, max: 29, title: 'อายุ 20 - 29 ปี' },
       { min: 30, max: 39, title: 'อายุ 30 - 39 ปี' },
       { min: 40, max: 49, title: 'อายุ 40 - 49 ปี' },
-      { min: 59, max: 59, title: 'อายุ 50 - 59 ปี' },
+      { min: 50, max: 59, title: 'อายุ 50 - 59 ปี' },
       { min: 60, max: 99, title: 'อายุ 60 ปีขึ้นไป' },
     ],
     type: '',
