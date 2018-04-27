@@ -148,7 +148,7 @@ class Info extends Component {
     const year = this.props.year.value
     if (date && month && year) {
       // const age = moment().diff(`${year}-${month}-${date}`, 'years')
-      const age = 2061 - year
+      const age = 2018 - year
       this.setState({ ...this.state, age }, () => {
         this.props.inputChange('info', 'age', age)
         this.props.inputChange('info', 'dob', `${year}-${month}-${date}`)
