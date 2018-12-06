@@ -4,14 +4,14 @@ const fieldsEnum = {
   DISTRICT: 'd',
   AMPHOE: 'a',
   PROVINCE: 'p',
-  ZIPCODE: 'z',
+  ZIPCODE: 'z'
 }
 
 /**
  * From jquery.Thailand.js line 30 - 128
  * Search result by FieldsType
  */
-const preprocess = (data) => {
+const preprocess = data => {
   if (!data[0].length) {
     // non-compacted database
     return data
@@ -19,21 +19,21 @@ const preprocess = (data) => {
   // compacted database in hierarchical form of:
   // [["province",[["amphur",[["district",["zip"...]]...]]...]]...]
   const expanded = []
-  data.forEach((provinceEntry) => {
+  data.forEach(provinceEntry => {
     const province = provinceEntry[0]
     const amphurList = provinceEntry[1]
-    amphurList.forEach((amphurEntry) => {
+    amphurList.forEach(amphurEntry => {
       const amphur = amphurEntry[0]
       const districtList = amphurEntry[1]
-      districtList.forEach((districtEntry) => {
+      districtList.forEach(districtEntry => {
         const district = districtEntry[0]
         const zipCodeList = districtEntry[1]
-        zipCodeList.forEach((zipCode) => {
+        zipCodeList.forEach(zipCode => {
           expanded.push({
             d: district,
             a: amphur,
             p: province,
-            z: zipCode,
+            z: zipCode
           })
         })
       })
@@ -57,5 +57,4 @@ const resolveResultbyField = (type: string, searchStr: string) => {
   return possibles
 }
 
-exports.resolveResultbyField = resolveResultbyField
-exports.fieldsEnum = fieldsEnum
+export { resolveResultbyField, fieldsEnum }

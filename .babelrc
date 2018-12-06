@@ -1,7 +1,13 @@
 {
-  "presets": ["next/babel"],
+  "presets": ["next/babel", "@zeit/next-typescript/babel"],
   "plugins": [
-    "transform-decorators-legacy",
+    "transform-flow-strip-types",
+    [
+      "@babel/plugin-proposal-decorators",
+      {
+        "legacy": true
+      }
+    ],
     [
       "import",
       {
@@ -11,11 +17,8 @@
     ]
   ],
   "env": {
-    // "development": {
-    //   "plugins": ["inline-dotenv"]
-    // },
-    "production": {
-      "plugins": ["transform-inline-environment-variables"]
+    "development": {
+      "plugins": ["inline-dotenv"]
     }
   }
 }

@@ -10,11 +10,11 @@ type AddressFormInputPropType = {
     a: string,
     d: string,
     p: string,
-    z: string,
+    z: string
   },
   kind: string,
   onAddressSelected: addresObject => void,
-  renderResult: data => React.Component,
+  renderResult: data => React.Component
 }
 
 const FormItem = Form.Item
@@ -25,15 +25,15 @@ const formItemLayout = {
     sm: { span: 24 },
     md: { span: 24 },
     lg: { span: 24 },
-    xl: { span: 24 },
+    xl: { span: 24 }
   },
   wrapperCol: {
     xs: { span: 24 },
     sm: { span: 24 },
     md: { span: 24 },
     lg: { span: 24 },
-    xl: { span: 24 },
-  },
+    xl: { span: 24 }
+  }
 }
 
 const colTwiceLayout = {
@@ -41,7 +41,7 @@ const colTwiceLayout = {
   sm: { span: 24 },
   md: { span: 11 },
   lg: { span: 11 },
-  xl: { span: 11 },
+  xl: { span: 11 }
 }
 
 const colTwiceTailLayout = {
@@ -49,7 +49,7 @@ const colTwiceTailLayout = {
   sm: { span: 24 },
   md: { span: 11 },
   lg: { span: 11 },
-  xl: { span: 11 },
+  xl: { span: 11 }
 }
 
 const colTrippleLayout = {
@@ -57,7 +57,7 @@ const colTrippleLayout = {
   sm: { span: 24 },
   md: { span: 7 },
   lg: { span: 7 },
-  xl: { span: 7 },
+  xl: { span: 7 }
 }
 
 const colTrippleTailLayout = {
@@ -65,14 +65,14 @@ const colTrippleTailLayout = {
   sm: { span: 24 },
   md: { span: 8 },
   lg: { span: 8 },
-  xl: { span: 8 },
+  xl: { span: 8 }
 }
 
 class AddressForm extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      addressObj: undefined,
+      addressObj: undefined
     }
     this.setAddressObj = this.setAddressObj.bind(this)
   }
@@ -83,10 +83,15 @@ class AddressForm extends React.Component {
   props: AddressFormInputPropType
   render() {
     const { addressObj } = this.state
-    const { defaultAddress, kind, fieldsEnum, resolveResultbyField } = this.props
+    const {
+      defaultAddress,
+      kind,
+      fieldsEnum,
+      resolveResultbyField
+    } = this.props
     const autoFields = []
 
-    const defaultAddressArr = Object.keys(defaultAddress).map((key) => {
+    const defaultAddressArr = Object.keys(defaultAddress).map(key => {
       const value = defaultAddress[key]
       return [key, value]
     })
@@ -135,8 +140,8 @@ class AddressForm extends React.Component {
               position: absolute;
               width: 100%;
               border: 1px solid rgba(0, 0, 0, 0);
-              top: 0;
-              left: 6px;
+              top: -5;
+              left: 5px;
               user-select: none;
               pointer-events: none;
               border: none;
@@ -145,7 +150,7 @@ class AddressForm extends React.Component {
             },
           `}
         </style>
-        {Object.keys(fieldsEnum).map((key) => {
+        {Object.keys(fieldsEnum).map(key => {
           let name
           switch (fieldsEnum[key]) {
             case 's':
@@ -175,7 +180,7 @@ class AddressForm extends React.Component {
               kind={kind}
               resolveResultbyField={resolveResultbyField}
               renderResult={this.props.renderResult}
-              onOptionSelected={(result) => {
+              onOptionSelected={result => {
                 this.setAddressObj(result)
                 this.props.onAddressSelected(result)
               }}
@@ -191,31 +196,45 @@ class AddressForm extends React.Component {
           const layout = kind === 'school' ? colTrippleLayout : colTwiceLayout
 
           if (fieldsEnum[key] !== 's') {
-            const colLayout = kind === 'school' ?
-              fieldsEnum[key] !== 'p' ? layout : colTrippleTailLayout
-              : fieldsEnum[key] !== 'z' ? layout : colTwiceTailLayout
+            const colLayout =
+              kind === 'school'
+                ? fieldsEnum[key] !== 'p'
+                  ? layout
+                  : colTrippleTailLayout
+                : fieldsEnum[key] !== 'z'
+                ? layout
+                : colTwiceTailLayout
 
             return (
               <div key={key}>
                 <Col {...colLayout} style={{ marginBottom: '48px' }}>
                   {addressTypeahead}
                 </Col>
-                {
-                  kind === 'school' ? (
-                    <Col span={1}>
-                      <span style={{ display: 'inline-block', width: '100%', textAlign: 'center' }}>
-                        &nbsp;
-                      </span>
-                    </Col>
-                  ) : fieldsEnum[key] !== 'a' && fieldsEnum[key] !== 'z' ? (
-                    <Col span={2}>
-                      <span style={{ display: 'inline-block', width: '100%', textAlign: 'center' }}>
-                        &nbsp;
-                      </span>
-                    </Col>
-                  ) : null
-                }
-
+                {kind === 'school' ? (
+                  <Col span={1}>
+                    <span
+                      style={{
+                        display: 'inline-block',
+                        width: '100%',
+                        textAlign: 'center'
+                      }}
+                    >
+                      &nbsp;
+                    </span>
+                  </Col>
+                ) : fieldsEnum[key] !== 'a' && fieldsEnum[key] !== 'z' ? (
+                  <Col span={2}>
+                    <span
+                      style={{
+                        display: 'inline-block',
+                        width: '100%',
+                        textAlign: 'center'
+                      }}
+                    >
+                      &nbsp;
+                    </span>
+                  </Col>
+                ) : null}
               </div>
             )
           }

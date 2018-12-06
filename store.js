@@ -9,6 +9,10 @@ import rootReducer, { initialState } from './reducers'
 const middlewares = [thunkMiddleware]
 
 const initStore = () =>
-  createStore(rootReducer, initialState, composeWithDevTools(applyMiddleware(...middlewares)))
+  createStore(
+    rootReducer,
+    initialState,
+    composeWithDevTools(applyMiddleware(...middlewares))
+  )
 
 export { initStore }

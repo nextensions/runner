@@ -1,5 +1,15 @@
 import React, { Component } from 'react'
-import { Steps, Button, message, Icon, Row, Col, Progress, Layout, notification } from 'antd'
+import {
+  Steps,
+  Button,
+  message,
+  Icon,
+  Row,
+  Col,
+  Progress,
+  Layout,
+  notification
+} from 'antd'
 import { connect } from 'react-redux'
 
 const axios = require('axios')
@@ -12,26 +22,24 @@ console.log = function() {}
 const steps = [
   {
     title: 'นักวิ่ง',
-    content: 'ข้อมูลส่วนตัว, ผู้ติดต่อ',
+    content: 'ข้อมูลส่วนตัว, ผู้ติดต่อ'
   },
   {
     title: 'ประเภท, ระยะทาง',
-    content: 'และขนาดเสื้อ',
+    content: 'และขนาดเสื้อ'
   },
   {
     title: 'สรุปค่าใช้จ่าย',
-    content: 'และวิธีการการจัดส่ง',
+    content: 'และวิธีการการจัดส่ง'
   },
   {
     title: 'ยืนยันการสมัคร',
-    content: 'และแจ้งชำระเงิน',
-  },
+    content: 'และแจ้งชำระเงิน'
+  }
 ]
 
 class RegisterForm extends Component {
-  static async getInitialProps({
-    store, isServer, pathname, query,
-  }) {
+  static async getInitialProps({ store, isServer, pathname, query }) {
     const data = await store.getState().data
     return { data }
   }
@@ -42,7 +50,7 @@ class RegisterForm extends Component {
       current: 0,
       finish: false,
       percent: 0,
-      existingCitizen: false,
+      existingCitizen: false
     }
   }
   next() {
@@ -59,24 +67,34 @@ class RegisterForm extends Component {
           if (this.state.existingCitizen) {
             notification.error({
               message: 'ผิดพลาด',
-              description: 'บัตรประชาชนซ้ำกับที่มีในระบบ',
+              description: 'บัตรประชาชนซ้ำกับที่มีในระบบ'
             })
             return null
           }
-          if (info.firstname && info.lastname && info.dob && info.age && info.gender && info.email && info.mobile && info.emer_person && info.emer_contact ) {
+          if (
+            info.firstname &&
+            info.lastname &&
+            info.dob &&
+            info.age &&
+            info.gender &&
+            info.email &&
+            info.mobile &&
+            info.emer_person &&
+            info.emer_contact
+          ) {
             this.setState({ current })
             return null
           }
           notification.error({
             message: 'ผิดพลาด',
-            description: 'กรุณากรอกข้อมูลให้ครบถ้วน',
+            description: 'กรุณากรอกข้อมูลให้ครบถ้วน'
           })
         }, 1000)
         return null
       }
       notification.error({
         message: 'ผิดพลาด',
-        description: 'กรุณากรอกข้อมูลให้ครบถ้วน',
+        description: 'กรุณากรอกข้อมูลให้ครบถ้วน'
       })
     } else if (current === 2) {
       if (typeof info !== 'undefined') {
@@ -92,7 +110,7 @@ class RegisterForm extends Component {
       }
       notification.warning({
         message: 'ผิดพลาด',
-        description: 'กรุณาระบุประเภท ระยะทาง และขนาดเสื้อ',
+        description: 'กรุณาระบุประเภท ระยะทาง และขนาดเสื้อ'
       })
     } else if (current === 3) {
       if (typeof info !== 'undefined') {
@@ -105,7 +123,7 @@ class RegisterForm extends Component {
             } else {
               notification.warning({
                 message: 'ผิดพลาด',
-                description: 'กรุณาระบุที่อยู่สำหรับจัดส่งเสื้อ และเบอร์ BIB',
+                description: 'กรุณาระบุที่อยู่สำหรับจัดส่งเสื้อ และเบอร์ BIB'
               })
               return null
             }
@@ -117,7 +135,7 @@ class RegisterForm extends Component {
       }
       notification.warning({
         message: 'ผิดพลาด',
-        description: 'กรุณาระบุวิธีจัดส่งเสื้อ และเบอร์ BIB',
+        description: 'กรุณาระบุวิธีจัดส่งเสื้อ และเบอร์ BIB'
       })
     }
     return null
@@ -148,7 +166,7 @@ class RegisterForm extends Component {
       } else {
         notification.error({
           message: 'ผิดพลาด',
-          description: 'กรุณาแนบหลักฐานการชำระเงิน และยอมรับเงื่อนใข',
+          description: 'กรุณาแนบหลักฐานการชำระเงิน และยอมรับเงื่อนใข'
         })
         return null
       }
@@ -157,31 +175,34 @@ class RegisterForm extends Component {
     return null
   }
 
-  existing = async (bodyProperty) => {
+  existing = async bodyProperty => {
     const res = await fetch(`${process.env.API_URL}/id-card`, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
-        Authorization: `Basic ${btoa(process.env.USERNAME + ':' + process.env.PASSWORD)}`,
-        'Content-Type': 'application/json',
+        // Authorization: `Basic ${btoa(process.env.USERNAME + ':' + process.env.PASSWORD)}`,
+        Authorization: `Basic ${Buffer.from(
+          process.env.USERNAME + ':' + process.env.PASSWORD
+        ).toString('base64')}`,
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        ...bodyProperty,
-      }),
+        ...bodyProperty
+      })
       // credentials: 'same-origin',
     })
-      .then((response) => {
+      .then(response => {
         if (response.status >= 400) {
           throw new Error('API Server Error')
         }
         if (response.status === 204) {
           return {
-            status: 'options',
+            status: 'options'
           }
         }
         return response.json()
       })
-      .then((data) => {
+      .then(data => {
         if (data.status === 'success') {
           console.log(data.existing)
           this.setState({ existingCitizen: data.existing })
@@ -190,39 +211,44 @@ class RegisterForm extends Component {
       })
   }
 
-  register = async (bodyProperty) => {
+  register = async bodyProperty => {
     const res = await fetch(`${process.env.API_URL}/register`, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
-        Authorization: `Basic ${btoa(process.env.USERNAME + ':' + process.env.PASSWORD)}`,
-        'Content-Type': 'application/json',
+        Authorization: `Basic ${btoa(
+          process.env.USERNAME + ':' + process.env.PASSWORD
+        )}`,
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        ...bodyProperty,
-      }),
+        ...bodyProperty
+      })
       // credentials: 'same-origin',
     })
-      .then((response) => {
+      .then(response => {
         if (response.status >= 400) {
           throw new Error('API Server Error')
         }
         if (response.status === 204) {
           return {
-            status: 'options',
+            status: 'options'
           }
         }
         return response.json()
       })
-      .then((data) => {
+      .then(data => {
         if (data.status === 'success') {
           console.log('completed')
           this.setState({ finish: true })
         } else if (data.status === 'not') {
-          message.warning('ไม่สามารถสมัครได้ กรุณาติดต่อ คุณหนาม โทร 088-469-4806', 30)
+          message.warning(
+            'ไม่สามารถสมัครได้ กรุณาติดต่อ คุณหนาม โทร 088-469-4806',
+            30
+          )
           this.setState({
             error: true,
-            errorMsg: 'ผิดพลาด ไม่สามารถบันทึกข้อมูลสมัครได้',
+            errorMsg: 'ผิดพลาด ไม่สามารถบันทึกข้อมูลสมัครได้'
           })
         }
       })
@@ -230,13 +256,15 @@ class RegisterForm extends Component {
     this.setState({ loading: false })
   }
   renderFinished = () => {
-
     let animate
     if (this.state.percent < 100) {
       animate = setInterval(() => {
-        const percent = this.state.percent < 100 ? this.state.percent += 10 : this.state.percent
+        const percent =
+          this.state.percent < 100
+            ? (this.state.percent += 10)
+            : this.state.percent
         this.setState({
-          percent,
+          percent
         })
       }, 200)
     } else {
@@ -247,12 +275,26 @@ class RegisterForm extends Component {
       <div>
         <Row type="flex" justify="center">
           <Row gutter={8}>
-            <Col span={24} style={{ textAlign: 'center', marginTop: '20px' }} >
-              <Progress type="circle" percent={this.state.percent} /><br/>
-              <p className="ant-upload-text" style={{ textAlign: 'center', fontSize: '22px', marginTop: '20px' }}>สมัครสำเร็จ</p>
+            <Col span={24} style={{ textAlign: 'center', marginTop: '20px' }}>
+              <Progress type="circle" percent={this.state.percent} />
+              <br />
+              <p
+                className="ant-upload-text"
+                style={{
+                  textAlign: 'center',
+                  fontSize: '22px',
+                  marginTop: '20px'
+                }}
+              >
+                สมัครสำเร็จ
+              </p>
               <p className="ant-upload-text" style={{ textAlign: 'center' }}>
-                การสมัครจะสมบูรณ์เมื่อท่านได้รับ E-mail ตอบรับภายใน 7 วัน<br />
-                หากมีข้อสงสัยกรุณาติดต่อ &nbsp;<a href="https://www.facbook.com/srtrunning">www.facbook.com/srtrunning</a>
+                การสมัครจะสมบูรณ์เมื่อท่านได้รับ E-mail ตอบรับภายใน 7 วัน
+                <br />
+                หากมีข้อสงสัยกรุณาติดต่อ &nbsp;
+                <a href="https://www.facbook.com/srtrunning">
+                  www.facbook.com/srtrunning
+                </a>
               </p>
             </Col>
           </Row>
@@ -263,53 +305,61 @@ class RegisterForm extends Component {
   render() {
     const { current, finish } = this.state
     const { stepContent } = this.props
-    return (
-      finish ?
-        this.renderFinished() :
-        <div>
-          <Steps current={current}>
-            {steps.map((item, index) => (
-              <Step
-                key={item.title}
-                title={item.title}
-                description={item.content}
-              />
-            ))}
-          </Steps>
-          <div className="steps-content">{stepContent[this.state.current].content}</div>
-          <div className="steps-action">
-            <Row>
-              <Col span={24} style={{ textAlign: 'right' }}>
-                {this.state.current > 0 && (
-                  <Button size="large" style={{ marginRight: 8 }} onClick={() => this.prev()}>
-                    <Icon type="left" />ย้อนกลับ
-                  </Button>
-                )}
-                {this.state.current < steps.length - 1 && (
-                  <Button type="primary" size="large" onClick={() => this.next()}>
-                    ต่อไป<Icon type="right" />
-                  </Button>
-                )}
-                {this.state.current === steps.length - 1 && (
-                  <Button
-                    type="success"
-                    size="large"
-                    onClick={() => this.handleSubmit()}
-                  >
-                    <Icon type="save" />
-                    ยืนยันการสมัครและชำระค่าบริการ
-                  </Button>
-                )}
-              </Col>
-            </Row>
-          </div>
+    return finish ? (
+      this.renderFinished()
+    ) : (
+      <div>
+        <Steps current={current}>
+          {steps.map((item, index) => (
+            <Step
+              key={item.title}
+              title={item.title}
+              description={item.content}
+            />
+          ))}
+        </Steps>
+        <div className="steps-content">
+          {stepContent[this.state.current].content}
         </div>
+        <div className="steps-action">
+          <Row>
+            <Col span={24} style={{ textAlign: 'right' }}>
+              {this.state.current > 0 && (
+                <Button
+                  size="large"
+                  style={{ marginRight: 8 }}
+                  onClick={() => this.prev()}
+                >
+                  <Icon type="left" />
+                  ย้อนกลับ
+                </Button>
+              )}
+              {this.state.current < steps.length - 1 && (
+                <Button type="primary" size="large" onClick={() => this.next()}>
+                  ต่อไป
+                  <Icon type="right" />
+                </Button>
+              )}
+              {this.state.current === steps.length - 1 && (
+                <Button
+                  type="success"
+                  size="large"
+                  onClick={() => this.handleSubmit()}
+                >
+                  <Icon type="save" />
+                  ยืนยันการสมัครและชำระค่าบริการ
+                </Button>
+              )}
+            </Col>
+          </Row>
+        </div>
+      </div>
     )
   }
 }
 
 const mapStateToProps = state => ({
-  state,
+  state
 })
 
 export default connect(mapStateToProps)(RegisterForm)
